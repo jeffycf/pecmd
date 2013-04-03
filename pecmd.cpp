@@ -85,7 +85,7 @@ int WINAPI _tWinMain(HINSTANCE hCurInst, HINSTANCE, LPTSTR lpszCmdLine, int nCmd
 	while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0) {
 		if (bRet == -1) {
 #ifdef PECMD_JAPANESE
-			MessageBox(msg.hwnd, TEXT("メッセージ処理エラーが発生しました。"), TEXT("エラー"), MB_OK | MB_ICONERROR | MB_TOPMOST);
+			MessageBox(msg.hwnd, TEXT("メッセージ処理エラーが発生しました。"), TEXT("アプリケーションエラー"), MB_OK | MB_ICONERROR | MB_TOPMOST);
 #else
 			MessageBox(msg.hwnd, TEXT("Message processing error has occurred."), TEXT("Application Error"), MB_OK | MB_ICONERROR | MB_TOPMOST);
 #endif
@@ -510,7 +510,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				if (MessageBox(hWnd, TEXT("Shutdown now ?"), TEXT("Shell-Application will exit"), MB_YESNO | MB_ICONQUESTION) == IDYES) {
 #endif
 					// wpeutl.exeを実行
-					if ((int)Execute(NULL, TEXT("open"), TEXT("wpeutil.exe"), TEXT("shutdown"), NULL, SW_SHOWDEFAULT) < 33) {
+					if ((int)Execute(NULL, NULL, TEXT("wpeutil.exe"), TEXT("shutdown"), NULL, SW_SHOWDEFAULT) < 33) {
 						// wpeutil.exeの起動に失敗 通常はこの時点でシャットダウンされている
 #ifdef PECMD_JAPANESE
 						MessageBox(hWnd, TEXT("シャットダウンに失敗しました。"), TEXT("エラー"), MB_OK | MB_ICONERROR);

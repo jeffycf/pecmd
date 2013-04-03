@@ -11,4 +11,4 @@
    Release            : リリースビルド (pecmd.exe)
    Release - Japanese : リリースビルド 日本語版 (pecmd_jp.exe)
 
-  プラットフォームは、それぞれWin32(32bit)とx64がありま
+  プラットフォームは、それぞれWin32(32bit)とx64があります。

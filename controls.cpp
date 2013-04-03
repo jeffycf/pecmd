@@ -17,8 +17,6 @@
 #define HDC_MEMID4 3
 #define HDC_MEMID5 4
 
-void SetImageButtonInfo(CONTROLINFO*, HWND, short, int, int, int, int, int, int);
-
 static WNDPROC DefButtonProc;
 
 Controls *ctls;
@@ -153,7 +151,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		backuptool = 4;
 	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage\\TrueImage.exe")) == TRUE) {
 		// TrueImageLE/Personal2
-		Execute(NULL, NULL, TEXT("reg.exe add HKCU\\Software\\Acronis\\TrueImage\\DontShow /v Updates /t REG_SZ /d 1 /f"), NULL, NULL, SW_SHOWMINIMIZED); //ç≈è¨âªèÛë‘Ç≈é¿çs
+		Execute(NULL, NULL, TEXT("reg.exe"), TEXT("add HKCU\\Software\\Acronis\\TrueImage\\DontShow /v Updates /t REG_SZ /d 1 /f"), NULL, SW_SHOWMINIMIZED); //ç≈è¨âªèÛë‘Ç≈é¿çs
 		Execute(NULL, NULL, TEXT("X:\\Program Files\\Acronis\\TrueImage\\schedhlp.exe"), NULL, NULL, SW_SHOWDEFAULT);
 		Execute(NULL, NULL, TEXT("X:\\Program Files\\Acronis\\TrueImage\\TimounterMonitor.exe"), NULL, NULL, SW_SHOWDEFAULT);
 		Execute(NULL, NULL, TEXT("X:\\Program Files\\Acronis\\TrueImage\\TrueImageMonitor.exe"), NULL, NULL, SW_SHOWDEFAULT);

@@ -9,7 +9,7 @@
 
 TCHAR uNxPath[11], ulPath[_MAX_DIR + _MAX_FNAME + _MAX_EXT + 1], ufFilePath[MAX_PATH + 1], uaFilePath1[MAX_PATH + 1], uaFilePath2[MAX_PATH + 1], uaFilePath3[MAX_PATH + 1], uaFilePath4[MAX_PATH + 1], uaFilePath5[MAX_PATH + 1], uaFilePath6[MAX_PATH + 1], uaFilePath7[MAX_PATH + 1], uaFilePath8[MAX_PATH + 1], uaFilePath9[MAX_PATH + 1];
 
-//ファイルの存在確認
+// ファイルの存在確認
 BOOL FileExist(LPCTSTR lpFileName)
 {
 	BOOL bResult;
@@ -28,7 +28,7 @@ BOOL FileExist(LPCTSTR lpFileName)
 	return bResult;
 }
 
-//ファイル選択ダイアログ
+// ファイル選択ダイアログ
 BOOL FileOpenDialog(HWND hWnd, LPCTSTR szFilter, LPCTSTR szDefExt, TCHAR *szFilePath)
 {
 	OPENFILENAME ofn;
@@ -48,7 +48,7 @@ BOOL FileOpenDialog(HWND hWnd, LPCTSTR szFilter, LPCTSTR szDefExt, TCHAR *szFile
 	}
 }
 
-//ファイル実行 (ShellExecute関数の引数と同じ)
+// ファイル実行 (ShellExecute関数の引数と同じ)
 HINSTANCE Execute(HWND hWnd, LPCTSTR lpVerb, LPCTSTR lpFile, LPCTSTR lpParameters, LPCTSTR lpDirectory, int nShow)
 {
 	SHELLEXECUTEINFO sei; 
@@ -66,10 +66,10 @@ HINSTANCE Execute(HWND hWnd, LPCTSTR lpVerb, LPCTSTR lpFile, LPCTSTR lpParameter
 	return sei.hInstApp;
 }
 
-//iniファイルからデータの読み出し (エラー処理なし)
+// iniファイルからデータの読み出し (エラー処理なし)
 void LoadIniData(void)
 {
-	//キーからデータの読み出し
+	// キーからデータの読み出し
 	GetPrivateProfileString(TEXT("pecmd"), TEXT("usbpath"), NULLTEXT, uNxPath, sizeof(uNxPath), INI);
 	GetPrivateProfileString(TEXT("pecmd"), TEXT("usblaunch"), NULLTEXT, ulPath, sizeof(ulPath), INI);
 	GetPrivateProfileString(TEXT("pecmd"), TEXT("userfiler"), NULLTEXT, ufFilePath, sizeof(ufFilePath), INI);
