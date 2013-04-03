@@ -24,7 +24,7 @@
 ATOM InitApp(HINSTANCE);
 BOOL InitInstance(HINSTANCE, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
+static HWND hParent;
 // hPrevInstance は使用しない。もう使われていないから。
 // _tWinMain を WinMain に絶対に変更しないこと。(コマンドライン文字列が正常に受け取れなくなる)
 int WINAPI _tWinMain(HINSTANCE hCurInst, HINSTANCE, LPTSTR lpszCmdLine, int nCmdShow)
@@ -93,12 +93,29 @@ int WINAPI _tWinMain(HINSTANCE hCurInst, HINSTANCE, LPTSTR lpszCmdLine, int nCmd
 		} else {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+
+			// ここでWM_KEYDOWNを処理 WndProc内だと一回しか来ないようなので
 			if (msg.message == WM_KEYDOWN) {
-				if (msg.wParam == VK_TAB) {
-					int flag = 1;
-					if (GetAsyncKeyState(VK_SHIFT)&0x8000)
-						flag = -1;
-					ctls->SetTabKeyFocus(flag);
+				switch (msg.wParam)
+				{
+				case VK_TAB:
+					{
+						// Tabキーによるフォーカス移動
+						int flag = 1;
+						if (GetAsyncKeyState(VK_SHIFT)&0x8000)
+							flag = -1;
+						ctls->SetTabKeyFocus(flag);
+					}
+					break;
+					
+				case VK_RETURN:
+					{
+						// Enterキーを押した際、ボタンを押したときと同じような効果を出す
+						HWND hFocus = GetFocus(), hFocus_Parent = (HWND)GetWindowLongPtr(hFocus, GWLP_HWNDPARENT);
+						if ((hFocus != NULL) && (hFocus_Parent != msg.hwnd))
+							SendMessage((HWND)GetWindowLongPtr(hFocus, GWLP_HWNDPARENT), WM_COMMAND, MAKEWPARAM(GetWindowLongPtr(hFocus, GWLP_ID), BN_CLICKED), (LPARAM)hFocus);
+					}
+					break;
 				}
 			}
 		}
@@ -164,6 +181,7 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
 		return FALSE;
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
+	hParent = hWnd;
 	return TRUE;
 }
 
@@ -536,7 +554,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			// ボタンの描画 (BS_OWNERDRAWスタイルが適用されているボタン)
 			ctls->DrawImageButtonOnOwnerDraw(((LPDRAWITEMSTRUCT)(lParam))->hwndItem, ((LPDRAWITEMSTRUCT)(lParam))->hDC, ((LPDRAWITEMSTRUCT)(lParam))->itemState);
 			break;
-		
+			/*
+		case WM_KEYDOWN:
+			if (wParam == VK_RETURN)
+			{
+				MessageBox(NULL, TEXT("Enter"), TEXT("Test"), MB_OK);
+				HWND hFocus;
+				LONG_PTR id;
+				hFocus = GetFocus();
+				if ((hFocus != NULL) && (hFocus != hWnd)) {
+					id = GetWindowLongPtr(hFocus, GWLP_ID);
+					TCHAR szBuf[256];
+					wsprintf(szBuf, TEXT("%d"), id);
+					MessageBox(NULL, szBuf, TEXT("Test"), MB_OK);
+					SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(GetWindowLongPtr(hFocus, GWLP_ID), BN_CLICKED), (LPARAM)hFocus);
+				}
+			}
+			break;
+		*/
 		default:
 			return (DefWindowProc(hWnd, msg, wParam, lParam));
 	}
