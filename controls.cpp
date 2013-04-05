@@ -769,12 +769,12 @@ void Controls::SetImageButtonInfo(int id, HWND hWnd_button, int hdc_imgid, int p
 
 	lpControlInfo->hWnd_control = hWnd_button;
 	lpControlInfo->hdc_id = hdc_imgid;
-	lpControlInfo->normal_x = pos_x1;
-	lpControlInfo->normal_y = pos_y1;
-	lpControlInfo->focus_x = pos_x2;
-	lpControlInfo->focus_y = pos_y2;
-	lpControlInfo->push_x = pos_x3;
-	lpControlInfo->push_y = pos_y3;
+	lpControlInfo->imgpos[0].x = pos_x1;
+	lpControlInfo->imgpos[0].y = pos_y1;
+	lpControlInfo->imgpos[1].x = pos_x2;
+	lpControlInfo->imgpos[1].y = pos_y2;
+	lpControlInfo->imgpos[2].x = pos_x3;
+	lpControlInfo->imgpos[2].y = pos_y3;
 	lpControlInfo->drawmode = 0;
 	lpControlInfo->option = 0;
 }
@@ -969,7 +969,7 @@ void Controls::DrawImageButtonOnMouseEvent(HWND hWnd_button, int flag)
 		
 		lpControlInfo->option |= 0x1;
 	} else {
-		if ((lpControlInfo->option & 0x1) == 0)
+		if (!(lpControlInfo->option & 0x1))
 			return;
 		lpControlInfo->option &= ~0x1;
 	}
@@ -1009,34 +1009,13 @@ void Controls::DrawImageButtonOnOwnerDraw(HWND hWnd_button, HDC hdc_button, UINT
 
 void Controls::DrawImageButton(CONTROLINFO *lpControlInfo, HDC hdc_button)
 {
-	int img_x, img_y;
 	RECT rect;
-	HWND hWnd_Button = lpControlInfo->hWnd_control;
 	
 	// ボタンの大きさを取得
-	GetClientRect(hWnd_Button, &rect);
-	
-	// 描画モードに応じて位置を設定
-	switch (lpControlInfo->drawmode)
-	{
-		case 1:
-			img_x = lpControlInfo->focus_x;
-			img_y = lpControlInfo->focus_y;
-			break;
-		
-		case 2:
-			img_x = lpControlInfo->push_x;
-			img_y = lpControlInfo->push_y;
-			break;
-		
-		default:
-			img_x = lpControlInfo->normal_x;
-			img_y = lpControlInfo->normal_y;
-			break;
-	}
+	GetClientRect(lpControlInfo->hWnd_control, &rect);
 	
 	// ボタンに画像を転送
-	BitBlt(hdc_button, rect.left, rect.top, rect.right, rect.bottom, hdc_mem[lpControlInfo->hdc_id], img_x, img_y, SRCCOPY);
+	BitBlt(hdc_button, rect.left, rect.top, rect.right, rect.bottom, hdc_mem[lpControlInfo->hdc_id], lpControlInfo->imgpos[lpControlInfo->drawmode].x, lpControlInfo->imgpos[lpControlInfo->drawmode].y, SRCCOPY);
 	
 	if (lpControlInfo->option & 0x2) {
 		// ボタン選択時 (キーボードフォーカス有り)

@@ -14,6 +14,7 @@ x64/
 build/
 [Bb]in/
 [Oo]oj/
+[Pp]ack/
 
 *_i.c
 *_p.c

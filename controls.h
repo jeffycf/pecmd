@@ -2,6 +2,16 @@
 
 #pragma once
 
+typedef struct IMGPOSINFO
+{
+	// IMGPOSINFO structure
+	// イメージボタン用の画像の位置情報を格納
+	//
+
+	short x, y;
+
+} IMGPOSINFO;
+
 typedef struct CONTROLINFO
 {
 	// CONTROLINFO structure
@@ -10,11 +20,10 @@ typedef struct CONTROLINFO
 	
 	HWND hWnd_control;
 	short hdc_id;
-	short normal_x, normal_y;
-	short focus_x, focus_y;
-	short push_x, push_y;
+	IMGPOSINFO imgpos[3];
 	short drawmode;
 	short option;
+
 } CONTROLINFO;
 
 class Controls {
