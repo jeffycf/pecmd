@@ -554,24 +554,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			// ボタンの描画 (BS_OWNERDRAWスタイルが適用されているボタン)
 			ctls->DrawImageButtonOnOwnerDraw(((LPDRAWITEMSTRUCT)(lParam))->hwndItem, ((LPDRAWITEMSTRUCT)(lParam))->hDC, ((LPDRAWITEMSTRUCT)(lParam))->itemState);
 			break;
-			/*
-		case WM_KEYDOWN:
-			if (wParam == VK_RETURN)
-			{
-				MessageBox(NULL, TEXT("Enter"), TEXT("Test"), MB_OK);
-				HWND hFocus;
-				LONG_PTR id;
-				hFocus = GetFocus();
-				if ((hFocus != NULL) && (hFocus != hWnd)) {
-					id = GetWindowLongPtr(hFocus, GWLP_ID);
-					TCHAR szBuf[256];
-					wsprintf(szBuf, TEXT("%d"), id);
-					MessageBox(NULL, szBuf, TEXT("Test"), MB_OK);
-					SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(GetWindowLongPtr(hFocus, GWLP_ID), BN_CLICKED), (LPARAM)hFocus);
-				}
-			}
-			break;
-		*/
+
 		default:
 			return (DefWindowProc(hWnd, msg, wParam, lParam));
 	}

@@ -96,7 +96,7 @@ int FilePathToFileName(LPCTSTR lpFilePath, TCHAR *lpFileName)
 	TCHAR szExt[_MAX_EXT+1];
 	
 	// パスを分解
-	_tsplitpath_s(lpFilePath, szDrive, (UINT)sizeof(szDrive), szDir, (UINT)sizeof(szDir), szFname, (UINT)sizeof(szFname), szExt, (UINT)sizeof(szExt));
+	_tsplitpath_s(lpFilePath, szDrive, sizeof(szDrive), szDir, sizeof(szDir), szFname, sizeof(szFname), szExt, sizeof(szExt));
 	
 	// ファイル名(拡張子込み)を生成
 	lstrcpy(lpFileName, szFname);

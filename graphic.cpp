@@ -23,7 +23,6 @@ BOOL LoadPictureOnResource(HDC hdc_main, LPCTSTR res, LPCTSTR type)
 	DWORD nSize;
 	HMODULE hInst = GetModuleHandle(NULL);
 	HRESULT result;
-	//bshort type;
 	long Height, Width;
 	int pic_x, pic_y;
 	
