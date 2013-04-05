@@ -1,14 +1,14 @@
 
- Launcher PE (x64�Ή�) �\�[�X�R�[�h
+ Launcher PE (x64対応) ソースコード
 
-  �@����́ALauncher PE (x64�Ή�) �̃\�[�X�R�[�h�ł��BVisual Studio 2010 �p��
-  �v���W�F�N�g�t�@�C���𓯕����Ă��܂��B�Ȃ��A64bit�Ńr���h����ۂɂ́A
-  Windows SDK v7.1 ���K�v�ł��B
+  　これは、Launcher PE (x64対応) のソースコードです。Visual Studio 2010 用の
+  プロジェクトファイルを同封しています。なお、64bitでビルドする際には、
+  Windows SDK v7.1 が必要です。
 
- *** �\���ꗗ ***
+ *** 構成一覧 ***
 
-   Debug              : �f�o�b�O�r���h (���܂������Ȃ��H)
-   Release            : �����[�X�r���h (pecmd.exe)
-   Release - Japanese : �����[�X�r���h ���{��� (pecmd_jp.exe)
+   Debug              : デバッグビルド (うまく動かない？)
+   Release            : リリースビルド (pecmd.exe)
+   Release - Japanese : リリースビルド 日本語版 (pecmd_jp.exe)
 
-  �v���b�g�t�H�[���́A���ꂼ��Win32(32bit)��x64������܂��B
+  プラットフォームは、それぞれWin32(32bit)とx64があります。
