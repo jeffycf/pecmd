@@ -888,7 +888,7 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 				DrawFileImage(hdc_mem[3], uaFilePath9, 2, 262);
 				
 				// USBメモリ内のランチャーのアイコンを取得 (取得できなかったらPStartのまま)
-				for(int i = 0; i < 26; i++)
+				for(int i = 1; i < 26; i++)
 				{
 					wsprintf(szLaunchPath, TEXT("%c:\\%s"), 'A'+i, ulPath);
 					if (FileExist(szLaunchPath) == TRUE) {

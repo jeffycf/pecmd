@@ -464,7 +464,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					// Pstart or Custom USB Memory Launcher
 					{
 						TCHAR szLaunchPath[MAX_PATH + 1];
-						for(int i = 0; i < 26; i++)
+						for(int i = 1; i < 26; i++)
 						{
 							wsprintf(szLaunchPath, TEXT("%c:\\%s"), 'A'+i, ulPath);
 							if (FileExist(szLaunchPath) == TRUE) {
