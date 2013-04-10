@@ -40,7 +40,7 @@ LRESULT CALLBACK ImgButtonProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 Controls::Controls(void)
 {
 	// GUIフォントを取得
-	Controls::hGUIFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+	hGUIFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
 }
 
 Controls::~Controls(void)
@@ -488,7 +488,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 			150, 262, 38, 20,
 			hWnd, (HMENU)IDC_RES1, hInst, NULL
 		);
-		SendMessage(hRes1, WM_SETFONT, (WPARAM)Controls::hGUIFont, TRUE); // フォント設定
+		SendMessage(hRes1, WM_SETFONT, (WPARAM)hGUIFont, TRUE); // フォント設定
 		SendMessage(hRes1, EM_SETLIMITTEXT, 5, 0); // 入力上限設定
 		
 		// Res2 (edit)
@@ -497,7 +497,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 			196, 262, 38, 20,
 			hWnd, (HMENU)IDC_RES2, hInst, NULL
 		);
-		SendMessage(hRes2, WM_SETFONT, (WPARAM)Controls::hGUIFont, TRUE);
+		SendMessage(hRes2, WM_SETFONT, (WPARAM)hGUIFont, TRUE);
 		SendMessage(hRes2, EM_SETLIMITTEXT, 5, 0);
 		
 		// ResChange

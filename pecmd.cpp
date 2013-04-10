@@ -111,9 +111,9 @@ int WINAPI _tWinMain(HINSTANCE hCurInst, HINSTANCE, LPTSTR lpszCmdLine, int nCmd
 				case VK_RETURN:
 					{
 						// Enterキーを押した際、ボタンを押したときと同じような効果を出す
-						HWND hFocus = GetFocus(), hFocus_Parent = (HWND)GetWindowLongPtr(hFocus, GWLP_HWNDPARENT);
-						if ((hFocus != NULL) && (hFocus_Parent != msg.hwnd))
-							SendMessage((HWND)GetWindowLongPtr(hFocus, GWLP_HWNDPARENT), WM_COMMAND, MAKEWPARAM(GetWindowLongPtr(hFocus, GWLP_ID), BN_CLICKED), (LPARAM)hFocus);
+						HWND hFocus = GetFocus();
+						if (hFocus != NULL)
+							SendMessage(hFocus, BM_CLICK, 0, 0);
 					}
 					break;
 				}
