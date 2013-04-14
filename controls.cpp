@@ -223,7 +223,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		// EaseUS Partition Master
 		hEaseUSPartitionMasterButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
+			25, 80, 210, 20,
 			hWnd, (HMENU)IDC_EASEUSPARTITIONMASTER, hInst, NULL
 		);
 		controls_all++;
@@ -232,7 +232,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		// Partition Wizard
 		hPartitionWizardButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
+			25, 80, 210, 20,
 			hWnd, (HMENU)IDC_PARTITIONWIZARD, hInst, NULL
 		);
 		controls_all++;
@@ -241,7 +241,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		// Acronis Disk Director
 		hAcronisDiskDirectorButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
+			25, 80, 210, 20,
 			hWnd, (HMENU)IDC_ACRODISKDIRECTOR11, hInst, NULL
 		);
 		controls_all++;
@@ -250,7 +250,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		// Paragon Partition Manager
 		hParagonPartitionManagerButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
+			25, 80, 210, 20,
 			hWnd, (HMENU)IDC_PARAGPARTITIONMANAGER, hInst, NULL
 		);
 		controls_all++;
@@ -259,7 +259,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		// 他のパーティションツール
 		hOtherPartitionToolButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
+			25, 80, 210, 20,
 			hWnd, (HMENU)IDC_OTHERPARTITIONTOOL, hInst, NULL
 		);
 		controls_all++;
