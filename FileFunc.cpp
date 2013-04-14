@@ -37,7 +37,7 @@ BOOL FileOpenDialog(HWND hWnd, LPCTSTR szFilter, LPCTSTR szDefExt, TCHAR *szFile
 	ofn.hwndOwner = hWnd;						// コモンダイアログの親ウィンドウハンドル
 	ofn.lpstrFilter = szFilter; 				// ファイルの種類
 	ofn.lpstrFile = szFilePath;					// 選択されたファイル名(フルパス)を受け取る変数のアドレス
-	ofn.nMaxFile = MAX_PATH;			// lpstrFileに指定した変数のサイズ
+	ofn.nMaxFile = MAX_PATH;					// lpstrFileに指定した変数のサイズ
 	ofn.Flags = OFN_HIDEREADONLY | OFN_CREATEPROMPT;	// フラグ指定
 	ofn.lpstrDefExt = szDefExt;					// デフォルトのファイルの種類
 	

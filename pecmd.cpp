@@ -3,8 +3,6 @@
 /*
 	WinPe-tchに付属のLauncher PEを、64BitPE上でも使用できるようにC++で一から書きました。
 	
-	たぶんバグだらけ
-	
 	英語はめちゃくちゃ
 
 	Release でのビルドをお勧めします。(Release - Japanese を選択すると、日本語でビルドします)
@@ -24,7 +22,7 @@
 ATOM InitApp(HINSTANCE);
 BOOL InitInstance(HINSTANCE, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-static HWND hParent;
+
 // hPrevInstance は使用しない。もう使われていないから。
 // _tWinMain を WinMain に絶対に変更しないこと。(コマンドライン文字列が正常に受け取れなくなる)
 int WINAPI _tWinMain(HINSTANCE hCurInst, HINSTANCE, LPTSTR lpszCmdLine, int nCmdShow)
@@ -78,6 +76,7 @@ int WINAPI _tWinMain(HINSTANCE hCurInst, HINSTANCE, LPTSTR lpszCmdLine, int nCmd
 		return 2;
 	}
 
+	// startnet2.cmdが存在する場合は実行する
 	if (FileExist(TEXT("startnet2.cmd")) == TRUE)
 		Execute(NULL, NULL, TEXT("startnet2.cmd"), NULL, NULL, SW_SHOWMINIMIZED);
 	
@@ -181,7 +180,6 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
 		return FALSE;
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
-	hParent = hWnd;
 	return TRUE;
 }
 
@@ -537,8 +535,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 #endif
 					} else
 						break; // wpeutil.exeの起動に成功したら、あとはPEが自動で電源を切ってくれる。
-							   // (このままこのアプリケーションが終了すると、シャットダウンのはずが再起動になってしまうかもしれないので。)
+						       // (このままこのアプリケーションが終了すると、シャットダウンのはずが再起動になってしまうかもしれないので。)
 					
+					// ウィンドウを削除
 					DestroyWindow(hWnd);
 				}
 			}

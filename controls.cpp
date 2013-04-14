@@ -308,7 +308,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	);
 	controls_all++;
 	
-	// MS-IME (ファイル存在確認がうまくいくかわからない
+	// MS-IME
 	if (FileExist(TEXT("imecmd.cmd")) == TRUE) {
 		hMSIMEButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
