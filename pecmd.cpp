@@ -1,11 +1,17 @@
 // pecmd.cpp : Launcher PEのメイン
 
 /*
+	Launcher PE
+	
 	WinPe-tchに付属のLauncher PEを、64BitPE上でも使用できるようにC++で一から書きました。
 	
 	英語はめちゃくちゃ
 
 	Release でのビルドをお勧めします。(Release - Japanese を選択すると、日本語でビルドします)
+
+	そのうち、言語ファイルを個別に用意して、対応できるようにしたい。
+
+	by あける
 */
 
 #include <windows.h>
@@ -15,6 +21,7 @@
 #include "controls.h"
 #include "FileFunc.h"
 #include "pecmd.h"
+#include "res.h"
 
 // ウィンドウクラス名
 #define PECMD_WNDCLASSNAME TEXT("pecmd")
@@ -77,7 +84,7 @@ int WINAPI _tWinMain(HINSTANCE hCurInst, HINSTANCE, LPTSTR lpszCmdLine, int nCmd
 	}
 
 	// startnet2.cmdが存在する場合は実行する
-	if (FileExist(TEXT("startnet2.cmd")) == TRUE)
+	if (FileExist(TEXT("startnet2.cmd")))
 		Execute(NULL, NULL, TEXT("startnet2.cmd"), NULL, NULL, SW_SHOWMINIMIZED);
 	
 	// メッセージを取得
@@ -207,7 +214,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				LoadIniData();
 				
 				// ボタンなどのコントロールを作成
-				if (ctls->CreateControls(hWnd, ((LPCREATESTRUCT)lParam)->hInstance) != 0) {
+				if (ctls->CreateControls(hWnd, ((LPCREATESTRUCT)lParam)->hInstance)) {
 					MessageBox(NULL, TEXT("Fatal Error."), TEXT("Error"), MB_OK | MB_ICONERROR);
 					return -1;
 				}
@@ -234,7 +241,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				// ペイント処理
 				hdc = BeginPaint(hWnd, &ps);
 				SelectObject(hdc, hFont); // フォントを選択
-				if (ctls->bSetRes == TRUE) {
+				if (ctls->bSetRes) {
 					// SetResが使用できる場合
 					TextOut(hdc, 138, 265, lpszMesStr1, lstrlen(lpszMesStr1));
 					TextOut(hdc, 190, 265, lpszMesStr2, lstrlen(lpszMesStr2));
@@ -378,9 +385,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 						TCHAR szFilePath[MAX_PATH + 1] = {0};
 						TCHAR szDrvLoadCmd[MAX_PATH + 1];
 #ifdef PECMD_JAPANESE
-						if (FileOpenDialog(NULL, TEXT("ドライバ情報ファイル (*.inf)\0*.inf\0すべてのファイル (*.*)\0*.*\0\0"), NULLTEXT, szFilePath) == TRUE) {
+						if (FileOpenDialog(NULL, TEXT("ドライバ情報ファイル (*.inf)\0*.inf\0すべてのファイル (*.*)\0*.*\0\0"), NULLTEXT, szFilePath)) {
 #else
-						if (FileOpenDialog(NULL, TEXT("Driver Information File (*.inf)\0*.inf\0All Files (*.*)\0*.*\0\0"), NULLTEXT, szFilePath) == TRUE) {
+						if (FileOpenDialog(NULL, TEXT("Driver Information File (*.inf)\0*.inf\0All Files (*.*)\0*.*\0\0"), NULLTEXT, szFilePath)) {
 #endif
 							if (FileExist(szFilePath) == TRUE) {
 								// Driver Information Fileが存在する場合
@@ -475,32 +482,31 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				
 				case IDC_RESDEF:
 					// ResDefault
-					Execute(NULL, NULL, TEXT("setres.exe"), TEXT("h800 v600 b32"), NULL, SW_SHOWDEFAULT);
+					SetDisplayRes(hWnd, 800, 600, 32);
 					break;
 					
 				case IDC_RESXGA:
 					// XGA
-					Execute(NULL, NULL, TEXT("setres.exe"), TEXT("h1024 v768 b32"), NULL, SW_SHOWDEFAULT);
+					SetDisplayRes(hWnd, 1024, 768, 32);
 					break;
 				
 				case IDC_RESSXGA:
 					// SXGA
-					Execute(NULL, NULL, TEXT("setres.exe"), TEXT("h1280 v1024 b32"), NULL, SW_SHOWDEFAULT);
+					SetDisplayRes(hWnd, 1280, 1024, 32);
 					break;
 				
 				case IDC_RESHD:
 					// HD
-					Execute(NULL, NULL, TEXT("setres.exe"), TEXT("h1920 v1080 b32"), NULL, SW_SHOWDEFAULT);
+					SetDisplayRes(hWnd, 1920, 1080, 32);
 					break;
 				
 				case IDC_RESCHANGE:
 					// Change Resolution
 					{
-						TCHAR res1[6], res2[6], szResCmd[15];
+						TCHAR res1[6], res2[6];
 						ctls->GetResText(res1, 1);
 						ctls->GetResText(res2, 2);
-						wsprintf(szResCmd, TEXT("h%s v%s b32"), res1, res2);
-						Execute(NULL, NULL, TEXT("setres.exe"), szResCmd, NULL, SW_SHOWDEFAULT);
+						SetDisplayRes(hWnd, _tstoi(res1), _tstoi(res2), 32);
 					}
 					break;
 				

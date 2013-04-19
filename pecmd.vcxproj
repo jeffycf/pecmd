@@ -230,12 +230,14 @@
     <ClCompile Include="FileFunc.cpp" />
     <ClCompile Include="graphic.cpp" />
     <ClCompile Include="pecmd.cpp" />
+    <ClCompile Include="res.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controls.h" />
     <ClInclude Include="FileFunc.h" />
     <ClInclude Include="graphic.h" />
     <ClInclude Include="pecmd.h" />
+    <ClInclude Include="res.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

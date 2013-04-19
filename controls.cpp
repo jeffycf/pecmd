@@ -75,7 +75,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	// 画像ボタンにするときはボタンにフォント設定しないので(というかしなくてもいいので)、WM_SETFONTはボタンには適用しない
 	
 	// ファイラー
-	if (FileExist(ufFilePath) == TRUE) {
+	if (FileExist(ufFilePath)) {
 		// ユーザーが自由に指定できるファイラー
 		hFilerButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -84,7 +84,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		filer = 1;
-	} else if (FileExist(TEXT("X:\\Program Files\\q-dir\\q-dir.exe")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\q-dir\\q-dir.exe"))) {
 		// Q-Dirが存在する場合
 		hQDirButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -93,7 +93,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		filer = 2;
-	} else if (FileExist(TEXT("X:\\Program Files\\7-Zip\\7zFM.exe")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\7-Zip\\7zFM.exe"))) {
 		// Q-Dirが存在しない & 7-Zipが存在する場合
 		h7ZipButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -113,7 +113,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	controls_all++;
 	
 	// バックアップツール, Backup Tools
-	if (FileExist(TEXT("X:\\Program Files\\Acronis\\BackupAndRecovery\\trueimage_starter.exe")) == TRUE) {
+	if (FileExist(TEXT("X:\\Program Files\\Acronis\\BackupAndRecovery\\trueimage_starter.exe"))) {
 		// Acronis Backup & Recovery 10
 		hAcroBackRecoverButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -122,7 +122,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		backuptool = 1;
-	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImageHome\\trueimage_starter.exe")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImageHome\\trueimage_starter.exe"))) {
 		// TrueImage2009以降
 		hAcroTrueImage2009Button = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -131,7 +131,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		backuptool = 2;
-	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage_starter.exe")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage_starter.exe"))) {
 		// TrueImage11
 		hAcroTrueImage11Button = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -140,7 +140,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		backuptool = 3;
-	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage.exe")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage.exe"))) {
 		// TrueImage10/9Home
 		hAcroTrueImage10or9HomeButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -149,7 +149,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		backuptool = 4;
-	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage\\TrueImage.exe")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage\\TrueImage.exe"))) {
 		// TrueImageLE/Personal2
 		Execute(NULL, NULL, TEXT("reg.exe"), TEXT("add HKCU\\Software\\Acronis\\TrueImage\\DontShow /v Updates /t REG_SZ /d 1 /f"), NULL, SW_SHOWMINIMIZED); //最小化状態で実行
 		Execute(NULL, NULL, TEXT("X:\\Program Files\\Acronis\\TrueImage\\schedhlp.exe"), NULL, NULL, SW_SHOWDEFAULT);
@@ -162,7 +162,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		backuptool = 5;
-	} else if (FileExist(TEXT("X:\\Program Files\\Seagate\\DiscWizard_starter.exe")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\Seagate\\DiscWizard_starter.exe"))) {
 		// DiscWizard
 		hDiscWizardButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -171,7 +171,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		backuptool = 6;
-	} else if (FileExist(TEXT("X:\\Program Files\\PBR\\program\\launcher.lnk")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\PBR\\program\\launcher.lnk"))) {
 		// Paragon Backup & Recovery
 		hParagonBackupAndRecoveryButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -180,7 +180,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		backuptool = 7;
-	} else if (FileExist(TEXT("X:\\Program Files\\easeus\\tb2.0\\bin\\PELoader.lnk")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\easeus\\tb2.0\\bin\\PELoader.lnk"))) {
 		// EASEUS Todo Backup 2.5x (公式PE互換)
 		hEaseUSTodoBackup25PEButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -189,7 +189,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		backuptool = 8;
-	} else if (FileExist(TEXT("X:\\Program Files\\easeus\\tb\\bin\\PELoader.lnk")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\easeus\\tb\\bin\\PELoader.lnk"))) {
 		// EaseUS Todo Backup 4.0.0.2 (公式PE互換)
 		hEaseUSTodoBackup4002PEButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -198,7 +198,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		backuptool = 9;
-	} else if (FileExist(TEXT("X:\\Program Files\\ETB\\bin\\loader.lnk")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\ETB\\bin\\loader.lnk"))) {
 		// EASEUS Todo Backup 2.5x (Win版互換)
 		hEaseUSTodoBackup25WinButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -207,7 +207,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		backuptool = 10;
-	} else if (FileExist(TEXT("X:\\Program Files\\otherbpt.lnk")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\otherbpt.lnk"))) {
 		// 他のバックアップツール
 		hOtherBackupToolButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -219,7 +219,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	}
 	
 	// パーティションツール
-	if (FileExist(TEXT("X:\\Program Files\\EPM\\bin\\epm0.lnk")) == TRUE) {
+	if (FileExist(TEXT("X:\\Program Files\\EPM\\bin\\epm0.lnk"))) {
 		// EaseUS Partition Master
 		hEaseUSPartitionMasterButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -228,7 +228,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		partitiontool = 1;
-	} else if (FileExist(TEXT("X:\\Program Files\\MPW\\PartitionWizard.lnk")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\MPW\\PartitionWizard.lnk"))) {
 		// Partition Wizard
 		hPartitionWizardButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -237,7 +237,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		partitiontool = 2;
-	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\DiskDirector\\trueimage_starter.exe")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\DiskDirector\\trueimage_starter.exe"))) {
 		// Acronis Disk Director
 		hAcronisDiskDirectorButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -246,7 +246,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		partitiontool = 3;
-	} else if (FileExist(TEXT("X:\\Program Files\\PPM\\program\\launcher.lnk")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\PPM\\program\\launcher.lnk"))) {
 		// Paragon Partition Manager
 		hParagonPartitionManagerButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -255,7 +255,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		);
 		controls_all++;
 		partitiontool = 4;
-	} else if (FileExist(TEXT("X:\\Program Files\\otherptt.lnk")) == TRUE) {
+	} else if (FileExist(TEXT("X:\\Program Files\\otherptt.lnk"))) {
 		// 他のパーティションツール
 		hOtherPartitionToolButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -309,7 +309,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	controls_all++;
 	
 	// MS-IME
-	if (FileExist(TEXT("imecmd.cmd")) == TRUE) {
+	if (FileExist(TEXT("imecmd.cmd"))) {
 		hMSIMEButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			145, 180, 130, 20,
@@ -320,7 +320,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	}
 	
 	// Windows RE
-	if (FileExist(TEXT("X:\\sources\\recovery\\recenv.exe")) == TRUE) {
+	if (FileExist(TEXT("X:\\sources\\recovery\\recenv.exe"))) {
 		hWindowsREButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			10, 205, 130, 20,
@@ -331,7 +331,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	}
 	
 	// Install Windows (NT6.x)
-	if (FileExist(TEXT("X:\\sources\\setup.exe")) == TRUE) {
+	if (FileExist(TEXT("X:\\sources\\setup.exe"))) {
 		hInstallWindowsButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			145, 205, 130, 20,
@@ -344,7 +344,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	// Other Applications
 	
 	// App1
-	if (FileExist(uaFilePath1) == TRUE) {
+	if (FileExist(uaFilePath1)) {
 		hApp1Button = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			10, 230, 20, 20,
@@ -355,7 +355,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	}
 	
 	// App2
-	if (FileExist(uaFilePath2) == TRUE) {
+	if (FileExist(uaFilePath2)) {
 		hApp2Button = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			35, 230, 20, 20,
@@ -366,7 +366,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	}
 	
 	// App3
-	if (FileExist(uaFilePath3) == TRUE) {
+	if (FileExist(uaFilePath3)) {
 		hApp3Button = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			60, 230, 20, 20,
@@ -377,7 +377,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	}
 	
 	// App4
-	if (FileExist(uaFilePath4) == TRUE) {
+	if (FileExist(uaFilePath4)) {
 		hApp4Button = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			85, 230, 20, 20,
@@ -388,7 +388,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	}
 	
 	// App5
-	if (FileExist(uaFilePath5) == TRUE) {
+	if (FileExist(uaFilePath5)) {
 		hApp5Button = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			110, 230, 20, 20,
@@ -399,7 +399,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	}
 	
 	// App6
-	if (FileExist(uaFilePath6) == TRUE) {
+	if (FileExist(uaFilePath6)) {
 		hApp6Button = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			135, 230, 20, 20,
@@ -410,7 +410,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	}
 	
 	// App7
-	if (FileExist(uaFilePath7) == TRUE) {
+	if (FileExist(uaFilePath7)) {
 		hApp7Button = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			160, 230, 20, 20,
@@ -421,7 +421,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	}
 	
 	// App8
-	if (FileExist(uaFilePath8) == TRUE) {
+	if (FileExist(uaFilePath8)) {
 		hApp8Button = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			185, 230, 20, 20,
@@ -432,7 +432,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	}
 	
 	// App9
-	if (FileExist(uaFilePath9) == TRUE) {
+	if (FileExist(uaFilePath9)) {
 		hApp9Button = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			210, 230, 20, 20,
@@ -452,8 +452,8 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		controls_all++;
 	}
 	
-	// 解析度変更
-	if (FileExist(TEXT("setres.exe")) == TRUE) {
+	// 解像度変更
+	//if (FileExist(TEXT("setres.exe"))) {
 		// Default
 		hResDefaultButton = CreateWindowEx(0,
 			TEXT("BUTTON"), NULLTEXT,  WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -484,7 +484,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		
 		// Res1 (edit)
 		hRes1 = CreateWindowEx(WS_EX_CLIENTEDGE,
-			TEXT("EDIT"), TEXT("0"), WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL,
+			TEXT("EDIT"), TEXT("0"), WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL | ES_NUMBER,
 			150, 262, 38, 20,
 			hWnd, (HMENU)IDC_RES1, hInst, NULL
 		);
@@ -493,7 +493,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		
 		// Res2 (edit)
 		hRes2 = CreateWindowEx(WS_EX_CLIENTEDGE,
-			TEXT("EDIT"), TEXT("0"), WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL,
+			TEXT("EDIT"), TEXT("0"), WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL | ES_NUMBER,
 			196, 262, 38, 20,
 			hWnd, (HMENU)IDC_RES2, hInst, NULL
 		);
@@ -509,9 +509,9 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		controls_all += 7;
 		
 		bSetRes = TRUE;
-	} else {
-		bSetRes = FALSE;
-	}
+	//} else {
+	//	bSetRes = FALSE;
+	//}
 	
 	// Reboot WinPE
 	hRebootButton = CreateWindowEx(0,
@@ -716,7 +716,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	}
 	
 	// SetRes
-	if (bSetRes == TRUE) {
+	if (bSetRes) {
 		// 画像をロード
 		LoadButtonImages(hWnd, 5);
 		
@@ -802,7 +802,7 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 			hBitmap = CreateCompatibleBitmap(hdc, 360, 60);
 			SelectObject(hdc_mem[0], hBitmap);
 			Boxfill(hdc_mem[0], 0, 0, 360, 60, hBrush_1); // 塗りつぶし
-			if (LoadPictureOnResource(hdc_mem[0], MAKEINTRESOURCE(IDG_IMG7ZIP), TEXT("GIF")) == FALSE)
+			if (!LoadPictureOnResource(hdc_mem[0], MAKEINTRESOURCE(IDG_IMG7ZIP), TEXT("GIF")))
 #ifdef PECMD_JAPANESE
 				MessageBox(NULL, TEXT("イメージの読み込みに失敗しました。(1)"), TEXT("エラー"), MB_OK | MB_ICONERROR);
 #else
@@ -816,7 +816,7 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 			hBitmap = CreateCompatibleBitmap(hdc, 420, 180);
 			SelectObject(hdc_mem[1], hBitmap);
 			Boxfill(hdc_mem[1], 0, 0, 420, 180, hBrush_1); // 塗りつぶし
-			if (LoadPictureOnResource(hdc_mem[1], MAKEINTRESOURCE(IDG_IMGDISK), TEXT("GIF")) == FALSE)
+			if (!LoadPictureOnResource(hdc_mem[1], MAKEINTRESOURCE(IDG_IMGDISK), TEXT("GIF")))
 #ifdef PECMD_JAPANESE
 				MessageBox(NULL, TEXT("イメージの読み込みに失敗しました。(2)"), TEXT("エラー"), MB_OK | MB_ICONERROR);
 #else
@@ -830,7 +830,7 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 			hBitmap = CreateCompatibleBitmap(hdc, 260, 200);
 			SelectObject(hdc_mem[2], hBitmap);
 			Boxfill(hdc_mem[2], 0, 0, 260, 200, hBrush_1); // 塗りつぶし
-			if (LoadPictureOnResource(hdc_mem[2], MAKEINTRESOURCE(IDG_IMGTOOLS), TEXT("GIF")) == FALSE)
+			if (!LoadPictureOnResource(hdc_mem[2], MAKEINTRESOURCE(IDG_IMGTOOLS), TEXT("GIF")))
 #ifdef PECMD_JAPANESE
 				MessageBox(NULL, TEXT("イメージの読み込みに失敗しました。(3)"), TEXT("エラー"), MB_OK | MB_ICONERROR);
 #else
@@ -849,7 +849,7 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 				hBitmap = CreateCompatibleBitmap(hdc, 20, 300);
 				SelectObject(hdc_mem[3], hBitmap);
 				Boxfill(hdc_mem[3], 0, 0, 20, 300, hBrush_1); // 塗りつぶし
-				if (LoadPictureOnResource(hdc_mem[3], MAKEINTRESOURCE(IDG_IMGAPPS), TEXT("GIF")) == FALSE)
+				if (!LoadPictureOnResource(hdc_mem[3], MAKEINTRESOURCE(IDG_IMGAPPS), TEXT("GIF")))
 #ifdef PECMD_JAPANESE
 					MessageBox(NULL, TEXT("イメージの読み込みに失敗しました。(4)"), TEXT("エラー"), MB_OK | MB_ICONERROR);
 #else
@@ -891,7 +891,7 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 				for(int i = 1; i < 26; i++)
 				{
 					wsprintf(szLaunchPath, TEXT("%c:\\%s"), 'A'+i, ulPath);
-					if (FileExist(szLaunchPath) == TRUE) {
+					if (FileExist(szLaunchPath)) {
 						// 塗りつぶしてから描画
 						Boxfill(hdc_mem[3], 2, 42, 17, 57, hBrush_1);
 						DrawFileImage(hdc_mem[3], szLaunchPath, 2, 42);
@@ -910,7 +910,7 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 			hBitmap = CreateCompatibleBitmap(hdc, 122, 80);
 			SelectObject(hdc_mem[4], hBitmap);
 			Boxfill(hdc_mem[4], 0, 0, 122, 80, hBrush_1); // 塗りつぶし
-			if (LoadPictureOnResource(hdc_mem[4], MAKEINTRESOURCE(IDG_IMGRES), TEXT("GIF")) == FALSE)
+			if (!LoadPictureOnResource(hdc_mem[4], MAKEINTRESOURCE(IDG_IMGRES), TEXT("GIF")))
 #ifdef PECMD_JAPANESE
 				MessageBox(NULL, TEXT("イメージの読み込みに失敗しました。(5)"), TEXT("エラー"), MB_OK | MB_ICONERROR);
 #else

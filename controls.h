@@ -69,7 +69,7 @@ private:
 	// 作成されたボタンの数
 	int controls_all;
 
-	// 解析度の入力ボックス
+	// 解像度の入力ボックス
 	HWND hRes1, hRes2;
 	
 	// 配列でまとめる

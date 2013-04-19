@@ -27,21 +27,17 @@ BOOL LoadPictureOnResource(HDC hdc_main, LPCTSTR res, LPCTSTR type)
 	int pic_x, pic_y;
 	
 	// リソースからデータの読み出し
-	hFind = FindResource(hInst, res, type);
-	if (hFind == NULL) return FALSE;
-	hLoad = LoadResource(hInst, hFind);
-	if (hLoad == NULL) return FALSE;
-	nSize = SizeofResource(hInst, hFind);
-	if (nSize == 0) return FALSE;
-	hMem = GlobalAlloc(GHND, nSize);
-	if (hMem == NULL) return FALSE;
+	if (!(hFind = FindResource(hInst, res, type))) return FALSE;
+	if (!(hLoad = LoadResource(hInst, hFind))) return FALSE;
+	if (!(nSize = SizeofResource(hInst, hFind))) return FALSE;
+	if (!(hMem = GlobalAlloc(GHND, nSize))) return FALSE;
 	
 	// データのコピー
 	CopyMemory(GlobalLock(hMem), LockResource(hLoad), nSize);
 	GlobalUnlock(hMem);
 	
 	result = CreateStreamOnHGlobal(hMem, TRUE, &iStream);
-	if (SUCCEEDED(result) == FALSE)
+	if (!SUCCEEDED(result))
 		return FALSE;
 	
 	// 画像読み込み
@@ -49,7 +45,7 @@ BOOL LoadPictureOnResource(HDC hdc_main, LPCTSTR res, LPCTSTR type)
 	
 	iStream->Release();
 	
-	if (SUCCEEDED(result) == FALSE || iPicture == NULL)
+	if ((!SUCCEEDED(result)) || (iPicture == NULL))
 		return FALSE;
 	
 	// 画像のサイズ取得
