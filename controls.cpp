@@ -9,6 +9,7 @@
 #include "FileFunc.h"
 #include "graphic.h"
 #include "pecmd.h"
+#include "lang.h"
 
 // HDCの何か
 #define HDC_MEMID1 0
@@ -18,6 +19,7 @@
 #define HDC_MEMID5 4
 
 static WNDPROC DefButtonProc;
+static WNDPROC DefEditProc;
 
 Controls *ctls;
 
@@ -35,6 +37,14 @@ LRESULT CALLBACK ImgButtonProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		
 	}
 	return CallWindowProc(DefButtonProc, hWnd, msg ,wParam ,lParam);
+}
+
+LRESULT CALLBACK EditProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	if ((msg == WM_CHAR) && (wParam == 9 || wParam == 13))
+		return 0;
+	
+	return CallWindowProc(DefEditProc, hWnd, msg, wParam, lParam);
 }
 
 Controls::Controls(void)
@@ -62,13 +72,16 @@ Controls::~Controls(void)
 // ボタンの作成とイメージボタン化 (長すぎる)
 int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 {
-	int filer = 0, backuptool = 0, partitiontool = 0;
+	int partitiontool = 0;
+	int filer_pos = 0, backuptool_pos = 0, partitiontool_pos = 0;
+	long ctl_id = 0;
 	UINT wintools = 0L, users_app = 0L;
-
+	
 	// ボタンのハンドル
-	HWND hFilerButton, hQDirButton, h7ZipButton, hFileOpenButton, hAcroBackRecoverButton, hAcroTrueImage2009Button, hAcroTrueImage11Button, hAcroTrueImage10or9HomeButton, hAcroTrueImageLEorPersonal2Button, hDiscWizardButton, hParagonBackupAndRecoveryButton, hEaseUSTodoBackup25PEButton, hEaseUSTodoBackup4002PEButton, hEaseUSTodoBackup25WinButton, hOtherBackupToolButton, hEaseUSPartitionMasterButton, hPartitionWizardButton, hAcronisDiskDirectorButton, hParagonPartitionManagerButton, hOtherPartitionToolButton, hCommandPromptButton, hNotepadButton, hRegistryEditorButton, hDiskpartButton, hLoadDriverButton, hMSIMEButton, hWindowsREButton, hInstallWindowsButton, hApp1Button, hApp2Button, hApp3Button, hApp4Button, hApp5Button, hApp6Button, hApp7Button, hApp8Button, hApp9Button, hPStartButton, hResDefaultButton, hResXGAButton, hResSXGAButton, hResHDButton, hResChangeButton, hRebootButton, hShutdownButton;
-
+	HWND hFilerButton, hFileOpenButton, hBackupToolButton, hPartitionToolButton, hCommandPromptButton, hNotepadButton, hRegistryEditorButton, hDiskpartButton, hLoadDriverButton, hMSIMEButton, hWindowsREButton, hInstallWindowsButton, hApp1Button, hApp2Button, hApp3Button, hApp4Button, hApp5Button, hApp6Button, hApp7Button, hApp8Button, hApp9Button, hPStartButton, hResDefaultButton, hResXGAButton, hResSXGAButton, hResHDButton, hResChangeButton, hRebootButton, hShutdownButton;
+	
 	controls_all = 0;
+	hFilerButton = hBackupToolButton = hPartitionToolButton = NULL;
 	
 	/*---------------------------------- ここから大量のボタンを作成 ----------------------------------*/
 	
@@ -77,266 +90,164 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	// ファイラー
 	if (FileExist(ufFilePath)) {
 		// ユーザーが自由に指定できるファイラー
-		hFilerButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 20, 180, 20,
-			hWnd, (HMENU)IDC_FILER, hInst, NULL
-		);
-		controls_all++;
-		filer = 1;
-	} else if (FileExist(TEXT("X:\\Program Files\\q-dir\\q-dir.exe"))) {
+		ctl_id = IDC_FILER;
+		filer_pos = 40;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\q-dir\\q-dir.exe"))) {
 		// Q-Dirが存在する場合
-		hQDirButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 20, 180, 20,
-			hWnd, (HMENU)IDC_QDIR, hInst, NULL
-		);
-		controls_all++;
-		filer = 2;
-	} else if (FileExist(TEXT("X:\\Program Files\\7-Zip\\7zFM.exe"))) {
+		ctl_id = IDC_QDIR;
+		filer_pos = 20;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\7-Zip\\7zFM.exe"))) {
 		// Q-Dirが存在しない & 7-Zipが存在する場合
-		h7ZipButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 20, 180, 20,
-			hWnd, (HMENU)IDC_7ZIP, hInst, NULL
-		);
+		ctl_id = IDC_7ZIP;
+	}
+	// ファイラーのボタン作成
+	if (ctl_id) {
+		hFilerButton = CreateButton(hWnd, hInst, 25, 20, 180, 20, ctl_id);
 		controls_all++;
-		filer = 3;
 	}
 	
 	// ファイルオープンダイアログ, File Open Dialog
-	hFileOpenButton = CreateWindowEx(0,
-		TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-		213, 20, 20, 20,
-		hWnd, (HMENU)IDC_FILEOPENDLG, hInst, NULL
-	);
+	hFileOpenButton = CreateButton(hWnd, hInst, 213, 20, 20, 20, IDC_FILEOPENDLG);
 	controls_all++;
+	
+	ctl_id = 0;
 	
 	// バックアップツール, Backup Tools
 	if (FileExist(TEXT("X:\\Program Files\\Acronis\\BackupAndRecovery\\trueimage_starter.exe"))) {
 		// Acronis Backup & Recovery 10
-		hAcroBackRecoverButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
-			hWnd, (HMENU)IDC_ACROBACKRECOVER, hInst, NULL
-		);
-		controls_all++;
-		backuptool = 1;
-	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImageHome\\trueimage_starter.exe"))) {
+		ctl_id = IDC_ACROBACKRECOVER;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImageHome\\trueimage_starter.exe"))) {
 		// TrueImage2009以降
-		hAcroTrueImage2009Button = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
-			hWnd, (HMENU)IDC_ACROTRUEIMAGE2009, hInst, NULL
-		);
-		controls_all++;
-		backuptool = 2;
-	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage_starter.exe"))) {
+		ctl_id = IDC_ACROTRUEIMAGE2009;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage_starter.exe"))) {
 		// TrueImage11
-		hAcroTrueImage11Button = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
-			hWnd, (HMENU)IDC_ACROTRUEIMAGE11, hInst, NULL
-		);
-		controls_all++;
-		backuptool = 3;
-	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage.exe"))) {
+		ctl_id = IDC_ACROTRUEIMAGE11;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage.exe"))) {
 		// TrueImage10/9Home
-		hAcroTrueImage10or9HomeButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
-			hWnd, (HMENU)IDC_ACROTRUEIMAGE10OR9HOME, hInst, NULL
-		);
-		controls_all++;
-		backuptool = 4;
-	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage\\TrueImage.exe"))) {
+		ctl_id = IDC_ACROTRUEIMAGE10OR9HOME;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\Acronis\\TrueImage\\TrueImage.exe"))) {
 		// TrueImageLE/Personal2
-		Execute(NULL, NULL, TEXT("reg.exe"), TEXT("add HKCU\\Software\\Acronis\\TrueImage\\DontShow /v Updates /t REG_SZ /d 1 /f"), NULL, SW_SHOWMINIMIZED); //最小化状態で実行
+		Execute(NULL, NULL, TEXT("reg.exe"), TEXT("add HKCU\\Software\\Acronis\\TrueImage\\DontShow /v Updates /t REG_SZ /d 1 /f"), NULL, SW_SHOWMINIMIZED); // 最小化状態で実行
 		Execute(NULL, NULL, TEXT("X:\\Program Files\\Acronis\\TrueImage\\schedhlp.exe"), NULL, NULL, SW_SHOWDEFAULT);
 		Execute(NULL, NULL, TEXT("X:\\Program Files\\Acronis\\TrueImage\\TimounterMonitor.exe"), NULL, NULL, SW_SHOWDEFAULT);
 		Execute(NULL, NULL, TEXT("X:\\Program Files\\Acronis\\TrueImage\\TrueImageMonitor.exe"), NULL, NULL, SW_SHOWDEFAULT);
-		hAcroTrueImageLEorPersonal2Button = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
-			hWnd, (HMENU)IDC_ACROTRUEIMAGELEORPERSONAL2, hInst, NULL
-		);
-		controls_all++;
-		backuptool = 5;
-	} else if (FileExist(TEXT("X:\\Program Files\\Seagate\\DiscWizard_starter.exe"))) {
-		// DiscWizard
-		hDiscWizardButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
-			hWnd, (HMENU)IDC_DISCWIZARD, hInst, NULL
-		);
-		controls_all++;
-		backuptool = 6;
-	} else if (FileExist(TEXT("X:\\Program Files\\PBR\\program\\launcher.lnk"))) {
-		// Paragon Backup & Recovery
-		hParagonBackupAndRecoveryButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
-			hWnd, (HMENU)IDC_PARAGBACKRECOVER, hInst, NULL
-		);
-		controls_all++;
-		backuptool = 7;
-	} else if (FileExist(TEXT("X:\\Program Files\\easeus\\tb2.0\\bin\\PELoader.lnk"))) {
-		// EASEUS Todo Backup 2.5x (公式PE互換)
-		hEaseUSTodoBackup25PEButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
-			hWnd, (HMENU)IDC_EASEUSTODOBACKUP25PE, hInst, NULL
-		);
-		controls_all++;
-		backuptool = 8;
-	} else if (FileExist(TEXT("X:\\Program Files\\easeus\\tb\\bin\\PELoader.lnk"))) {
-		// EaseUS Todo Backup 4.0.0.2 (公式PE互換)
-		hEaseUSTodoBackup4002PEButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
-			hWnd, (HMENU)IDC_EASEUSTODOBACKUP4002PE, hInst, NULL
-		);
-		controls_all++;
-		backuptool = 9;
-	} else if (FileExist(TEXT("X:\\Program Files\\ETB\\bin\\loader.lnk"))) {
-		// EASEUS Todo Backup 2.5x (Win版互換)
-		hEaseUSTodoBackup25WinButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
-			hWnd, (HMENU)IDC_EASEUSTODOBACKUP25WIN, hInst, NULL
-		);
-		controls_all++;
-		backuptool = 10;
-	} else if (FileExist(TEXT("X:\\Program Files\\otherbpt.lnk"))) {
-		// 他のバックアップツール
-		hOtherBackupToolButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 50, 210, 20,
-			hWnd, (HMENU)IDC_OTHERBACKUPTOOL, hInst, NULL
-		);
-		controls_all++;
-		backuptool = 11;
+		ctl_id = IDC_ACROTRUEIMAGELEORPERSONAL2;
 	}
+	else if (FileExist(TEXT("X:\\Program Files\\Seagate\\DiscWizard_starter.exe"))) {
+		// DiscWizard
+		ctl_id = IDC_DISCWIZARD;
+		backuptool_pos = 20;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\PBR\\program\\launcher.lnk"))) {
+		// Paragon Backup & Recovery
+		ctl_id = IDC_PARAGBACKRECOVER;
+		backuptool_pos = 40;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\easeus\\tb2.0\\bin\\PELoader.lnk"))) {
+		// EASEUS Todo Backup 2.5x (公式PE互換)
+		ctl_id = IDC_EASEUSTODOBACKUP25PE;
+		backuptool_pos = 60;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\easeus\\tb\\bin\\PELoader.lnk"))) {
+		// EaseUS Todo Backup 4.0.0.2 (公式PE互換)
+		ctl_id = IDC_EASEUSTODOBACKUP4002PE;
+		backuptool_pos = 60;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\ETB\\bin\\loader.lnk"))) {
+		// EASEUS Todo Backup 2.5x (Win版互換)
+		ctl_id = IDC_EASEUSTODOBACKUP25WIN;
+		backuptool_pos = 60;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\otherbpt.lnk"))) {
+		// 他のバックアップツール
+		ctl_id = IDC_OTHERBACKUPTOOL;
+		backuptool_pos = 160;
+	}
+	// バックアップツールのボタンを作成
+	if (ctl_id) {
+		hBackupToolButton = CreateButton(hWnd, hInst, 25, 50, 210, 20, ctl_id);
+		controls_all++;
+	}
+	
+	ctl_id = 0;
 	
 	// パーティションツール
 	if (FileExist(TEXT("X:\\Program Files\\EPM\\bin\\epm0.lnk"))) {
 		// EaseUS Partition Master
-		hEaseUSPartitionMasterButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 80, 210, 20,
-			hWnd, (HMENU)IDC_EASEUSPARTITIONMASTER, hInst, NULL
-		);
-		controls_all++;
-		partitiontool = 1;
-	} else if (FileExist(TEXT("X:\\Program Files\\MPW\\PartitionWizard.lnk"))) {
+		ctl_id = IDC_EASEUSPARTITIONMASTER;
+		partitiontool_pos = 80;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\MPW\\PartitionWizard.lnk"))) {
 		// Partition Wizard
-		hPartitionWizardButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 80, 210, 20,
-			hWnd, (HMENU)IDC_PARTITIONWIZARD, hInst, NULL
-		);
-		controls_all++;
-		partitiontool = 2;
-	} else if (FileExist(TEXT("X:\\Program Files\\Acronis\\DiskDirector\\trueimage_starter.exe"))) {
+		ctl_id = IDC_PARTITIONWIZARD;
+		partitiontool_pos = 100;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\Acronis\\DiskDirector\\trueimage_starter.exe"))) {
 		// Acronis Disk Director
-		hAcronisDiskDirectorButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 80, 210, 20,
-			hWnd, (HMENU)IDC_ACRODISKDIRECTOR11, hInst, NULL
-		);
-		controls_all++;
-		partitiontool = 3;
-	} else if (FileExist(TEXT("X:\\Program Files\\PPM\\program\\launcher.lnk"))) {
+		ctl_id = IDC_ACRODISKDIRECTOR11;
+		partitiontool_pos = 120;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\PPM\\program\\launcher.lnk"))) {
 		// Paragon Partition Manager
-		hParagonPartitionManagerButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 80, 210, 20,
-			hWnd, (HMENU)IDC_PARAGPARTITIONMANAGER, hInst, NULL
-		);
-		controls_all++;
-		partitiontool = 4;
-	} else if (FileExist(TEXT("X:\\Program Files\\otherptt.lnk"))) {
+		ctl_id = IDC_PARAGPARTITIONMANAGER;
+		partitiontool_pos = 140;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\otherptt.lnk"))) {
 		// 他のパーティションツール
-		hOtherPartitionToolButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			25, 80, 210, 20,
-			hWnd, (HMENU)IDC_OTHERPARTITIONTOOL, hInst, NULL
-		);
+		ctl_id = IDC_OTHERPARTITIONTOOL;
+		partitiontool_pos = 160;
+	}
+	// パーティションツールのボタンを作成
+	if (ctl_id) {
+		hPartitionToolButton = CreateButton(hWnd, hInst, 25, 80, 210, 20, ctl_id);
 		controls_all++;
-		partitiontool = 5;
 	}
 	
 	// Windows Tools
 	
 	// Command Prompt (コマンドプロンプト)
-	hCommandPromptButton = CreateWindowEx(0,
-		TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-		10, 130, 130, 20,
-		hWnd, (HMENU)IDC_COMMANDPROMPT, hInst, NULL
-	);
+	hCommandPromptButton = CreateButton(hWnd, hInst, 10, 130, 130, 20, IDC_COMMANDPROMPT);
 	controls_all++;
 	
 	// Notepad (メモ帳)
-	hNotepadButton = CreateWindowEx(0,
-		TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-		145, 130, 130, 20,
-		hWnd, (HMENU)IDC_NOTEPAD, hInst, NULL
-	);
+	hNotepadButton = CreateButton(hWnd, hInst, 145, 130, 130, 20, IDC_NOTEPAD);
 	controls_all++;
 	
 	// Registry Editor (レジストリエディター)
-	hRegistryEditorButton = CreateWindowEx(0,
-		TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-		10, 155, 130, 20,
-		hWnd, (HMENU)IDC_REGISTRYEDITOR, hInst, NULL
-	);
+	hRegistryEditorButton = CreateButton(hWnd, hInst, 10, 155, 130, 20, IDC_REGISTRYEDITOR);
 	controls_all++;
 	
 	// Diskpart
-	hDiskpartButton = CreateWindowEx(0,
-		TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-		145, 155, 130, 20,
-		hWnd, (HMENU)IDC_DISKPART, hInst, NULL
-	);
+	hDiskpartButton = CreateButton(hWnd, hInst, 145, 155, 130, 20, IDC_DISKPART);
 	controls_all++;
 	
 	// Load Driver (ドライバ読み込み)
-	hLoadDriverButton = CreateWindowEx(0,
-		TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-		10, 180, 130, 20,
-		hWnd, (HMENU)IDC_LOADDRIVER, hInst, NULL
-	);
+	hLoadDriverButton = CreateButton(hWnd, hInst, 10, 180, 130, 20, IDC_LOADDRIVER);
 	controls_all++;
 	
 	// MS-IME
 	if (FileExist(TEXT("imecmd.cmd"))) {
-		hMSIMEButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			145, 180, 130, 20,
-			hWnd, (HMENU)IDC_MSIME, hInst, NULL
-		);
+		hMSIMEButton = CreateButton(hWnd, hInst, 145, 180, 130, 20, IDC_MSIME);
 		controls_all++;
 		wintools |= 0x10;
 	}
 	
 	// Windows RE
 	if (FileExist(TEXT("X:\\sources\\recovery\\recenv.exe"))) {
-		hWindowsREButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			10, 205, 130, 20,
-			hWnd, (HMENU)IDC_WINDOWSRE, hInst, NULL
-		);
+		hWindowsREButton = CreateButton(hWnd, hInst, 10, 205, 130, 20, IDC_WINDOWSRE);
 		controls_all++;
 		wintools |= 0x20;
 	}
 	
 	// Install Windows (NT6.x)
 	if (FileExist(TEXT("X:\\sources\\setup.exe"))) {
-		hInstallWindowsButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			145, 205, 130, 20,
-			hWnd, (HMENU)IDC_INSTALLWINDOWS, hInst, NULL
-		);
+		hInstallWindowsButton = CreateButton(hWnd, hInst, 145, 205, 130, 20, IDC_INSTALLWINDOWS);
 		controls_all++;
 		wintools |= 0x40;
 	}
@@ -345,195 +256,129 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	
 	// App1
 	if (FileExist(uaFilePath1)) {
-		hApp1Button = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			10, 230, 20, 20,
-			hWnd, (HMENU)IDC_APP1, hInst, NULL
-		);
+		hApp1Button = CreateButton(hWnd, hInst, 10, 230, 20, 20, IDC_APP1);
 		controls_all++;
 		users_app |= 0x1;
 	}
 	
 	// App2
 	if (FileExist(uaFilePath2)) {
-		hApp2Button = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			35, 230, 20, 20,
-			hWnd, (HMENU)IDC_APP2, hInst, NULL
-		);
+		hApp2Button = CreateButton(hWnd, hInst, 35, 230, 20, 20, IDC_APP2);
 		controls_all++;
 		users_app |= 0x2;
 	}
 	
 	// App3
 	if (FileExist(uaFilePath3)) {
-		hApp3Button = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			60, 230, 20, 20,
-			hWnd, (HMENU)IDC_APP3, hInst, NULL
-		);
+		hApp3Button = CreateButton(hWnd, hInst, 60, 230, 20, 20, IDC_APP3);
 		controls_all++;
 		users_app |= 0x4;
 	}
 	
 	// App4
 	if (FileExist(uaFilePath4)) {
-		hApp4Button = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			85, 230, 20, 20,
-			hWnd, (HMENU)IDC_APP4, hInst, NULL
-		);
+		hApp4Button = CreateButton(hWnd, hInst, 85, 230, 20, 20, IDC_APP4);
 		controls_all++;
 		users_app |= 0x8;
 	}
 	
 	// App5
 	if (FileExist(uaFilePath5)) {
-		hApp5Button = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			110, 230, 20, 20,
-			hWnd, (HMENU)IDC_APP5, hInst, NULL
-		);
+		hApp5Button = CreateButton(hWnd, hInst, 110, 230, 20, 20, IDC_APP6);
 		controls_all++;
 		users_app |= 0x10;
 	}
 	
 	// App6
 	if (FileExist(uaFilePath6)) {
-		hApp6Button = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			135, 230, 20, 20,
-			hWnd, (HMENU)IDC_APP6, hInst, NULL
-		);
+		hApp6Button = CreateButton(hWnd, hInst, 135, 230, 20, 20, IDC_APP7);
 		controls_all++;
 		users_app |= 0x20;
 	}
 	
 	// App7
 	if (FileExist(uaFilePath7)) {
-		hApp7Button = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			160, 230, 20, 20,
-			hWnd, (HMENU)IDC_APP7, hInst, NULL
-		);
+		hApp7Button = CreateButton(hWnd, hInst, 160, 230, 20, 20, IDC_APP7);
 		controls_all++;
 		users_app |= 0x40;
 	}
 	
 	// App8
 	if (FileExist(uaFilePath8)) {
-		hApp8Button = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			185, 230, 20, 20,
-			hWnd, (HMENU)IDC_APP8, hInst, NULL
-		);
+		hApp8Button = CreateButton(hWnd, hInst, 185, 230, 20, 20, IDC_APP8);
 		controls_all++;
 		users_app |= 0x80;
 	}
 	
 	// App9
 	if (FileExist(uaFilePath9)) {
-		hApp9Button = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			210, 230, 20, 20,
-			hWnd, (HMENU)IDC_APP9, hInst, NULL
-		);
+		hApp9Button = CreateButton(hWnd, hInst, 210, 230, 20, 20, IDC_APP9);
 		controls_all++;
 		users_app |= 0x100;
 	}
 	
 	// PStart or Custom USB Memory Launcher
 	if (!lstrcmp(uNxPath, TEXT("true"))) {
-		hPStartButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			235, 230, 20, 20,
-			hWnd, (HMENU)IDC_PSTART, hInst, NULL
-		);
+		hPStartButton = CreateButton(hWnd, hInst, 235, 230, 20, 20, IDC_PSTART);
 		controls_all++;
 	}
 	
 	// 解像度変更
-	//if (FileExist(TEXT("setres.exe"))) {
-		// Default
-		hResDefaultButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT,  WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			10, 255, 61, 16,
-			hWnd, (HMENU)IDC_RESDEF, hInst, NULL
-		);
-		
-		// XGA
-		hResXGAButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			73, 255, 61, 16,
-			hWnd, (HMENU)IDC_RESXGA, hInst, NULL
-		);
-		
-		// SXGA
-		hResSXGAButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			10, 272, 61, 16,
-			hWnd, (HMENU)IDC_RESSXGA, hInst, NULL
-		);
-		
-		// HD
-		hResHDButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			73, 272, 61, 16,
-			hWnd, (HMENU)IDC_RESHD, hInst, NULL
-		);
-		
-		// Res1 (edit)
-		hRes1 = CreateWindowEx(WS_EX_CLIENTEDGE,
-			TEXT("EDIT"), TEXT("0"), WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL | ES_NUMBER,
-			150, 262, 38, 20,
-			hWnd, (HMENU)IDC_RES1, hInst, NULL
-		);
-		SendMessage(hRes1, WM_SETFONT, (WPARAM)hGUIFont, TRUE); // フォント設定
-		SendMessage(hRes1, EM_SETLIMITTEXT, 5, 0); // 入力上限設定
-		
-		// Res2 (edit)
-		hRes2 = CreateWindowEx(WS_EX_CLIENTEDGE,
-			TEXT("EDIT"), TEXT("0"), WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL | ES_NUMBER,
-			196, 262, 38, 20,
-			hWnd, (HMENU)IDC_RES2, hInst, NULL
-		);
-		SendMessage(hRes2, WM_SETFONT, (WPARAM)hGUIFont, TRUE);
-		SendMessage(hRes2, EM_SETLIMITTEXT, 5, 0);
-		
-		// ResChange
-		hResChangeButton = CreateWindowEx(0,
-			TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			237, 263, 45, 16,
-			hWnd, (HMENU)IDC_RESCHANGE, hInst, NULL
-		);
-		controls_all += 7;
-		
-		bSetRes = TRUE;
-	//} else {
-	//	bSetRes = FALSE;
-	//}
+	
+	// Default
+	hResDefaultButton = CreateButton(hWnd, hInst, 10, 255, 61, 16, IDC_RESDEF);
+	
+	// XGA
+	hResXGAButton = CreateButton(hWnd, hInst, 73, 255, 61, 16, IDC_RESXGA);
+	
+	// SXGA
+	hResSXGAButton = CreateButton(hWnd, hInst, 10, 272, 61, 16, IDC_RESSXGA);
+	
+	// HD
+	hResHDButton = CreateButton(hWnd, hInst, 73, 272, 61, 16, IDC_RESHD);
+	
+	// Res1 (edit)
+	hRes1 = CreateWindowEx(WS_EX_CLIENTEDGE,
+		TEXT("EDIT"), TEXT("0"), WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL | ES_NUMBER,
+		150, 262, 38, 20,
+		hWnd, (HMENU)IDC_RES1, hInst, NULL
+	);
+	SendMessage(hRes1, WM_SETFONT, (WPARAM)hGUIFont, TRUE); // フォント設定
+	SendMessage(hRes1, EM_SETLIMITTEXT, 5, 0); // 入力上限設定
+	
+	// Res2 (edit)
+	hRes2 = CreateWindowEx(WS_EX_CLIENTEDGE,
+		TEXT("EDIT"), TEXT("0"), WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL | ES_NUMBER,
+		196, 262, 38, 20,
+		hWnd, (HMENU)IDC_RES2, hInst, NULL
+	);
+	SendMessage(hRes2, WM_SETFONT, (WPARAM)hGUIFont, TRUE);
+	SendMessage(hRes2, EM_SETLIMITTEXT, 5, 0);
+	
+	// エディトボックスのプロシージャーを取得
+	DefEditProc = (WNDPROC)GetWindowLongPtr(hRes1, GWLP_WNDPROC);
+
+	// プロシージャーを設定
+	SetWindowLongPtr(hRes1, GWLP_WNDPROC, (LONG_PTR)EditProc);
+	SetWindowLongPtr(hRes2, GWLP_WNDPROC, (LONG_PTR)EditProc);
+
+	// ResChange
+	hResChangeButton = CreateButton(hWnd, hInst, 237, 263, 45, 16, IDC_RESCHANGE);
+	controls_all += 7;
 	
 	// Reboot WinPE
-	hRebootButton = CreateWindowEx(0,
-		TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-		10, 325, 130, 20,
-		hWnd, (HMENU)IDC_REBOOTWINPE, hInst, NULL
-	);
+	hRebootButton = CreateButton(hWnd, hInst, 10, 325, 130, 20, IDC_REBOOTWINPE);
 	controls_all++;
 	
 	// Shutdown WinPE
-	hShutdownButton = CreateWindowEx(0,
-		TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-		150, 325, 130, 20,
-		hWnd, (HMENU)IDC_SHUTDOWNWINPE, hInst, NULL
-	);
+	hShutdownButton = CreateButton(hWnd, hInst, 150, 325, 130, 20, IDC_SHUTDOWNWINPE);
 	controls_all++;
 	
 	// 作成されたボタンの数だけ配列を確保
 	controlinfo = (CONTROLINFO *)malloc(sizeof(CONTROLINFO) * controls_all);
 	if (controlinfo == NULL)
 		return 1;
-
+	
 	// 実際に値を設定したボタンの数
 	int controls_set = 0;
 	
@@ -541,24 +386,12 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	LoadButtonImages(hWnd, 3);
 	
 	// ファイラー
-	if (filer) {
+	if (hFilerButton) {
 		// 画像をロード
 		LoadButtonImages(hWnd, 1);
 		
-		switch (filer)
-		{
-			case 1:
-				SetImageButtonInfo(controls_set, hFilerButton, HDC_MEMID1, 0, 40, 180, 40, 180, 40);
-				break;
-			
-			case 2:
-				SetImageButtonInfo(controls_set, hQDirButton, HDC_MEMID1, 0, 20, 180, 20, 180, 20);
-				break;
-			
-			case 3:
-				SetImageButtonInfo(controls_set, h7ZipButton, HDC_MEMID1, 0, 0, 180, 0, 180, 0);
-				break;
-		}
+		// 情報をセット
+		SetImageButtonInfo(controls_set, hFilerButton, HDC_MEMID1, 0, filer_pos, 180, filer_pos, 180, filer_pos);
 		controls_set++;
 	}
 	
@@ -566,84 +399,18 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	SetImageButtonInfo(controls_set, hFileOpenButton, HDC_MEMID4, 0, 60, 0, 80, 0, 80);
 	controls_set++;
 	
-	if (backuptool || partitiontool)
+	if (hBackupToolButton || hPartitionToolButton)
 		LoadButtonImages(hWnd, 2);
 	
 	// バックアップツール
-	if (backuptool) {
-		switch (backuptool)
-		{
-			case 1:
-				SetImageButtonInfo(controls_set, hAcroBackRecoverButton, HDC_MEMID2, 0, 0, 210, 0, 210, 0);
-				break;
-			
-			case 2:
-				SetImageButtonInfo(controls_set, hAcroTrueImage2009Button, HDC_MEMID2, 0, 0, 210, 0, 210, 0);
-				break;
-			
-			case 3:
-				SetImageButtonInfo(controls_set, hAcroTrueImage11Button, HDC_MEMID2, 0, 0, 210, 0, 210, 0);
-				break;
-			
-			case 4:
-				SetImageButtonInfo(controls_set, hAcroTrueImage10or9HomeButton, HDC_MEMID2, 0, 0, 210, 0, 210, 0);
-				break;
-			
-			case 5:
-				SetImageButtonInfo(controls_set, hAcroTrueImageLEorPersonal2Button, HDC_MEMID2, 0, 0, 210, 0, 210, 0);
-				break;
-			
-			case 6:
-				SetImageButtonInfo(controls_set, hDiscWizardButton, HDC_MEMID2, 0, 20, 210, 20, 210, 20);
-				break;
-			
-			case 7:
-				SetImageButtonInfo(controls_set, hParagonBackupAndRecoveryButton, HDC_MEMID2, 0, 40, 210, 40, 210, 40);
-				break;
-			
-			case 8:
-				SetImageButtonInfo(controls_set, hEaseUSTodoBackup25PEButton, HDC_MEMID2, 0, 60, 210, 60, 210, 60);
-				break;
-			
-			case 9:
-				SetImageButtonInfo(controls_set, hEaseUSTodoBackup4002PEButton, HDC_MEMID2, 0, 60, 210, 60, 210, 60);
-				break;
-			
-			case 10:
-				SetImageButtonInfo(controls_set, hEaseUSTodoBackup25WinButton, HDC_MEMID2, 0, 60, 210, 60, 210, 60);
-				break;
-			
-			case 11:
-				SetImageButtonInfo(controls_set, hOtherBackupToolButton, HDC_MEMID2, 0, 160, 210, 160, 210, 160);
-				break;
-		}
+	if (hBackupToolButton) {
+		SetImageButtonInfo(controls_set, hBackupToolButton, HDC_MEMID2, 0, backuptool_pos, 210, backuptool_pos, 210, backuptool_pos);
 		controls_set++;
 	}
 	
 	// パーティションツール
-	if (partitiontool) {
-		switch (partitiontool)
-		{
-			case 1:
-				SetImageButtonInfo(controls_set, hEaseUSPartitionMasterButton, HDC_MEMID2, 0, 80, 210, 80, 210, 80);
-				break;
-			
-			case 2:
-				SetImageButtonInfo(controls_set, hPartitionWizardButton, HDC_MEMID2, 0, 100, 210, 100, 210, 100);
-				break;
-			
-			case 3:
-				SetImageButtonInfo(controls_set, hAcronisDiskDirectorButton, HDC_MEMID2, 0, 120, 210, 120, 210, 120);
-				break;
-			
-			case 4:
-				SetImageButtonInfo(controls_set, hParagonPartitionManagerButton, HDC_MEMID2, 0, 140, 210, 140, 210, 140);
-				break;
-			
-			case 5:
-				SetImageButtonInfo(controls_set, hOtherPartitionToolButton, HDC_MEMID2, 0, 160, 210, 160, 210, 160);
-				break;
-		}
+	if (hPartitionToolButton) {
+		SetImageButtonInfo(controls_set, hPartitionToolButton, HDC_MEMID2, 0, partitiontool_pos, 210, partitiontool_pos, 210, partitiontool_pos);
 		controls_set++;
 	}
 	
@@ -715,30 +482,27 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		controls_set++;
 	}
 	
-	// SetRes
-	if (bSetRes) {
-		// 画像をロード
-		LoadButtonImages(hWnd, 5);
-		
-		SetImageButtonInfo(controls_set, hResDefaultButton, HDC_MEMID5, 0, 0, 61, 0, 61, 0);
-		SetImageButtonInfo(controls_set+1, hResXGAButton, HDC_MEMID5, 0, 16, 61, 16, 61, 16);
-		SetImageButtonInfo(controls_set+2, hResSXGAButton, HDC_MEMID5, 0, 32, 61, 32, 61, 32);
-		SetImageButtonInfo(controls_set+3, hResHDButton, HDC_MEMID5, 0, 48, 61, 48, 61, 48);
-		/* 以下は入力ボックスだが、Tabキーのフォーカス移動を処理するため、ボタンのハンドルのみ入れる */
-		SetImageButtonInfo(controls_set+4, hRes1, -1, 0, 0, 0, 0, 0, 0);
-		SetImageButtonInfo(controls_set+5, hRes2, -1, 0, 0, 0, 0, 0, 0);
-		controlinfo[controls_set+4].option = 0x10;
-		controlinfo[controls_set+5].option = 0x10;
-		
-		SetImageButtonInfo(controls_set+6, hResChangeButton, HDC_MEMID5, 16, 64, 61, 64, 61, 64);
-		controls_set += 7;
-	}
+	// 解像度変更
+	LoadButtonImages(hWnd, 5);
+	
+	SetImageButtonInfo(controls_set, hResDefaultButton, HDC_MEMID5, 0, 0, 61, 0, 61, 0);
+	SetImageButtonInfo(controls_set+1, hResXGAButton, HDC_MEMID5, 0, 16, 61, 16, 61, 16);
+	SetImageButtonInfo(controls_set+2, hResSXGAButton, HDC_MEMID5, 0, 32, 61, 32, 61, 32);
+	SetImageButtonInfo(controls_set+3, hResHDButton, HDC_MEMID5, 0, 48, 61, 48, 61, 48);
+	/* 以下は入力ボックスだが、Tabキーのフォーカス移動を処理するため、ボタンのハンドルのみ入れる */
+	SetImageButtonInfo(controls_set+4, hRes1, -1, 0, 0, 0, 0, 0, 0);
+	SetImageButtonInfo(controls_set+5, hRes2, -1, 0, 0, 0, 0, 0, 0);
+	controlinfo[controls_set+4].option = 0x10;
+	controlinfo[controls_set+5].option = 0x10;
+	
+	SetImageButtonInfo(controls_set+6, hResChangeButton, HDC_MEMID5, 16, 64, 61, 64, 61, 64);
+	controls_set += 7;
 	
 	// Reboot / Shutdown
 	SetImageButtonInfo(controls_set, hRebootButton, HDC_MEMID3, 0, 0, 130, 0, 130, 0);
 	SetImageButtonInfo(controls_set+1, hShutdownButton, HDC_MEMID3, 0, 20, 130, 20, 130, 20);
 	controls_set += 2;
-
+	
 	// ボタンのプロシージャーを取得 (どのボタンのものも同じなので一回のみ)
 	DefButtonProc = (WNDPROC)GetWindowLongPtr(controlinfo[0].hWnd_control, GWLP_WNDPROC);
 	
@@ -749,10 +513,10 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		
 		if (controlinfo[i].hdc_id == -1)
 			continue;
-
+		
 		// ボタンのサブクラス化
 		SetWindowLongPtr(controlinfo[i].hWnd_control, GWLP_WNDPROC, (LONG_PTR)ImgButtonProc);
-
+		
 		// イメージボタン化 (BS_OWNERDRAWスタイルを適用)
 		SendMessage(controlinfo[i].hWnd_control, BM_SETSTYLE, BS_OWNERDRAW, TRUE);
 	}
@@ -760,13 +524,23 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	return 0;
 }
 
+// ボタンを作成
+HWND Controls::CreateButton(HWND hWnd, HINSTANCE hInst, int pos_x, int pos_y, int size_x, int size_y, long id)
+{
+	return CreateWindowEx(0,
+		TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+		pos_x, pos_y, size_x, size_y,
+		hWnd, (HMENU)id, hInst, NULL
+	);
+}
+
 // イメージボタンの情報をセット
 void Controls::SetImageButtonInfo(int id, HWND hWnd_button, int hdc_imgid, int pos_x1, int pos_y1, int pos_x2, int pos_y2, int pos_x3, int pos_y3)
 {
 	CONTROLINFO *lpControlInfo;
-
+	
 	lpControlInfo = &controlinfo[id];
-
+	
 	lpControlInfo->hWnd_control = hWnd_button;
 	lpControlInfo->hdc_id = hdc_imgid;
 	lpControlInfo->imgpos[0].x = pos_x1;
@@ -788,6 +562,8 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 	
 	if (id > 5) return;
 	
+	HFONT hGuiFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+	
 	// 論理ブラシを作成
 	hBrush_1 = CreateSolidBrush(RGB(252, 254, 252));
 	
@@ -802,12 +578,18 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 			hBitmap = CreateCompatibleBitmap(hdc, 360, 60);
 			SelectObject(hdc_mem[0], hBitmap);
 			Boxfill(hdc_mem[0], 0, 0, 360, 60, hBrush_1); // 塗りつぶし
-			if (!LoadPictureOnResource(hdc_mem[0], MAKEINTRESOURCE(IDG_IMG7ZIP), TEXT("GIF")))
-#ifdef PECMD_JAPANESE
-				MessageBox(NULL, TEXT("イメージの読み込みに失敗しました。(1)"), TEXT("エラー"), MB_OK | MB_ICONERROR);
-#else
-				MessageBox(NULL, TEXT("Failed to load the image. (1)"), TEXT("Error"), MB_OK | MB_ICONERROR);
-#endif
+			if (!LoadPictureOnResource(hdc_mem[0], MAKEINTRESOURCE(IDG_IMG7ZIP)))
+				ShowLoadPictureError(1);
+			
+			// 文字を描画
+			SelectObject(hdc_mem[0], hGuiFont);
+			SetBkMode(hdc_mem[0], TRANSPARENT);
+			DrawStringForImageButton(hdc_mem[0], langStr.szBtn7Zip, 39, 5, 180, 17, 219, 5, 360, 17, FALSE);
+			DrawStringForImageButton(hdc_mem[0], langStr.szBtnComputer, 39, 25, 106, 37, 219, 25, 286, 37, FALSE);
+			DrawStringForImageButton(hdc_mem[0], TEXT("["), 107, 25, 114, 57, 287, 25, 294, 57, FALSE);
+			DrawStringForImageButton(hdc_mem[0], langStr.szBtnQDir, 135, 25, 180, 77, 315, 25, 360, 77, FALSE);
+			DrawStringForImageButton(hdc_mem[0], langStr.szBtnUsersFiler, 39, 45, 180, 97, 219, 45, 360, 97, FALSE);
+			
 			break;
 		
 		case 2:
@@ -816,12 +598,22 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 			hBitmap = CreateCompatibleBitmap(hdc, 420, 180);
 			SelectObject(hdc_mem[1], hBitmap);
 			Boxfill(hdc_mem[1], 0, 0, 420, 180, hBrush_1); // 塗りつぶし
-			if (!LoadPictureOnResource(hdc_mem[1], MAKEINTRESOURCE(IDG_IMGDISK), TEXT("GIF")))
-#ifdef PECMD_JAPANESE
-				MessageBox(NULL, TEXT("イメージの読み込みに失敗しました。(2)"), TEXT("エラー"), MB_OK | MB_ICONERROR);
-#else
-				MessageBox(NULL, TEXT("Failed to load the image. (2)"), TEXT("Error"), MB_OK | MB_ICONERROR);
-#endif
+			if (!LoadPictureOnResource(hdc_mem[1], MAKEINTRESOURCE(IDG_IMGDISK)))
+				ShowLoadPictureError(2);
+			
+			// 文字を描画
+			SelectObject(hdc_mem[1], hGuiFont);
+			SetBkMode(hdc_mem[1], TRANSPARENT);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnTrueImage, 27, 5, 210, 17, 237, 5, 420, 17, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnDiscWizard, 27, 25, 210, 37, 237, 25, 420, 37, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnParagonBackupAndRecovery, 27, 45, 210, 57, 237, 45, 420, 57, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnEaseUSTodoBackup, 27, 65, 210, 77, 237, 65, 420, 77, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnEaseUSPartitionMaster, 27, 85, 210, 97, 237, 85, 420, 97, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnMiniToolPartitionWizard, 27, 105, 210, 117, 237, 105, 420, 117, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnAcronisDiskDirector, 27, 125, 210, 137, 237, 125, 420, 137, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnParagonPartitionManager, 27, 145, 210, 157, 237, 145, 420, 157, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnOtherDiskTool, 27, 165, 210, 177, 237, 165, 420, 177, FALSE);
+			
 			break;
 		
 		case 3:
@@ -830,12 +622,29 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 			hBitmap = CreateCompatibleBitmap(hdc, 260, 200);
 			SelectObject(hdc_mem[2], hBitmap);
 			Boxfill(hdc_mem[2], 0, 0, 260, 200, hBrush_1); // 塗りつぶし
-			if (!LoadPictureOnResource(hdc_mem[2], MAKEINTRESOURCE(IDG_IMGTOOLS), TEXT("GIF")))
-#ifdef PECMD_JAPANESE
-				MessageBox(NULL, TEXT("イメージの読み込みに失敗しました。(3)"), TEXT("エラー"), MB_OK | MB_ICONERROR);
-#else
-				MessageBox(NULL, TEXT("Failed to load the image. (3)"), TEXT("Error"), MB_OK | MB_ICONERROR);
-#endif
+			if (!LoadPictureOnResource(hdc_mem[2], MAKEINTRESOURCE(IDG_IMGTOOLS)))
+				ShowLoadPictureError(3);
+			
+			// ファイルアイコンを描画
+			DrawFileImageEx(hdc_mem[2], TEXT("cmd.exe"), szSysDir, 4, 42, 134, 42);
+			DrawFileImageEx(hdc_mem[2], TEXT("notepad.exe"), szSysDir, 4, 62, 134, 62);
+			DrawFileImageEx(hdc_mem[2], TEXT("regedit.exe"), szWinDir, 4, 82, 134, 82);
+			DrawFileImageEx(hdc_mem[2], TEXT("diskpart.exe"), szSysDir, 4, 102, 134, 102);
+			
+			// 文字を描画
+			SelectObject(hdc_mem[2], hGuiFont);
+			SetBkMode(hdc_mem[2], TRANSPARENT);
+			DrawStringForImageButton(hdc_mem[2], langStr.szBtnReboot, 27, 5, 130, 17, 157, 5, 260, 17, FALSE);
+			DrawStringForImageButton(hdc_mem[2], langStr.szBtnShutdown, 27, 25, 130, 37, 157, 25, 260, 37, FALSE);
+			DrawStringForImageButton(hdc_mem[2], langStr.szBtnCommandPrompt, 27, 45, 130, 57, 157, 45, 260, 57, FALSE);
+			DrawStringForImageButton(hdc_mem[2], langStr.szBtnNotepad, 27, 65, 130, 77, 157, 65, 260, 77, FALSE);
+			DrawStringForImageButton(hdc_mem[2], langStr.szBtnRegEdit, 27, 85, 130, 97, 157, 85, 260, 97, FALSE);
+			DrawStringForImageButton(hdc_mem[2], langStr.szBtnDiskpart, 27, 105, 130, 117, 157, 105, 260, 117, FALSE);
+			DrawStringForImageButton(hdc_mem[2], langStr.szBtnLoadDriver, 27, 125, 130, 137, 157, 125, 260, 137, FALSE);
+			DrawStringForImageButton(hdc_mem[2], langStr.szBtnMSIME, 27, 145, 130, 157, 157, 145, 260, 157, FALSE);
+			DrawStringForImageButton(hdc_mem[2], langStr.szBtnWinRE, 27, 165, 130, 177, 157, 165, 260, 177, FALSE);
+			DrawStringForImageButton(hdc_mem[2], langStr.szBtnInstallWindows, 27, 185, 130, 197, 157, 185, 260, 197, FALSE);
+			
 			break;
 		
 		case 4:
@@ -849,12 +658,9 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 				hBitmap = CreateCompatibleBitmap(hdc, 20, 300);
 				SelectObject(hdc_mem[3], hBitmap);
 				Boxfill(hdc_mem[3], 0, 0, 20, 300, hBrush_1); // 塗りつぶし
-				if (!LoadPictureOnResource(hdc_mem[3], MAKEINTRESOURCE(IDG_IMGAPPS), TEXT("GIF")))
-#ifdef PECMD_JAPANESE
-					MessageBox(NULL, TEXT("イメージの読み込みに失敗しました。(4)"), TEXT("エラー"), MB_OK | MB_ICONERROR);
-#else
-					MessageBox(NULL, TEXT("Failed to load the image. (4)"), TEXT("Error"), MB_OK | MB_ICONERROR);
-#endif
+				if (!LoadPictureOnResource(hdc_mem[3], MAKEINTRESOURCE(IDG_IMGAPPS)))
+					ShowLoadPictureError(4);
+				
 				SelectObject(hdc_mem[3], hBrush_1);
 				
 				// 枠を描画
@@ -872,7 +678,7 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 				RoundRect(hdc_mem[3], 0, 240, 20, 260, 6, 6);
 				RoundRect(hdc_mem[3], 0, 260, 20, 280, 6, 6);
 				RoundRect(hdc_mem[3], 0, 280, 20, 300, 6, 6);
-
+				
 				// フォルダアイコンを描画
 				DrawFolderImage(hdc_mem[3], 62, 82);
 				
@@ -898,7 +704,7 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 						break;
 					}
 				}
-			
+				
 				// いろいろ削除
 				DeleteObject(hBrush_2);
 			}
@@ -910,12 +716,18 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 			hBitmap = CreateCompatibleBitmap(hdc, 122, 80);
 			SelectObject(hdc_mem[4], hBitmap);
 			Boxfill(hdc_mem[4], 0, 0, 122, 80, hBrush_1); // 塗りつぶし
-			if (!LoadPictureOnResource(hdc_mem[4], MAKEINTRESOURCE(IDG_IMGRES), TEXT("GIF")))
-#ifdef PECMD_JAPANESE
-				MessageBox(NULL, TEXT("イメージの読み込みに失敗しました。(5)"), TEXT("エラー"), MB_OK | MB_ICONERROR);
-#else
-				MessageBox(NULL, TEXT("Failed to load the image. (5)"), TEXT("Error"), MB_OK | MB_ICONERROR);
-#endif
+			if (!LoadPictureOnResource(hdc_mem[4], MAKEINTRESOURCE(IDG_IMGRES)))
+				ShowLoadPictureError(5);
+			
+			// 文字を描画
+			SelectObject(hdc_mem[4], hGuiFont);
+			SetBkMode(hdc_mem[4], TRANSPARENT);
+			DrawStringForImageButton(hdc_mem[4], TEXT("800x600"), 0, 3, 61, 15, 61, 3, 122, 15, TRUE);
+			DrawStringForImageButton(hdc_mem[4], TEXT("1024x768"), 0, 19, 61, 31, 61, 19, 122, 31, TRUE);
+			DrawStringForImageButton(hdc_mem[4], TEXT("1280x1024"), 0, 35, 61, 47, 61, 35, 122, 47, TRUE);
+			DrawStringForImageButton(hdc_mem[4], TEXT("1900x1080"), 0, 51, 61, 63, 61, 51, 122, 63, TRUE);
+			DrawStringForImageButton(hdc_mem[4], langStr.szBtnResChange, 15, 67, 61, 79, 61, 67, 105, 79, TRUE);
+			
 			break;
 		
 	}
@@ -923,6 +735,13 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 	DeleteObject(hBitmap);
 	DeleteObject(hBrush_1);
 	ReleaseDC(hWnd, hdc);
+}
+
+void Controls::ShowLoadPictureError(int id)
+{
+	TCHAR szMes[156];
+	wsprintf(szMes, TEXT("%s(%d)"), langStr.szErrorLoadPicture, id);
+	MessageBox(NULL, szMes, langStr.szErrorTitle, MB_OK | MB_ICONERROR);
 }
 
 // コントロールのテキストを取得
@@ -1039,7 +858,7 @@ void Controls::SetTabKeyFocus(int key_flag)
 			if (hWnd_focus == controlinfo[i].hWnd_control) activectlid = i;
 		}
 	}
-
+	
 	for(i = 0; i < controls_all; i++) {
 		activectlid += key_flag;
 		if (activectlid >= controls_all)
@@ -1048,14 +867,12 @@ void Controls::SetTabKeyFocus(int key_flag)
 			activectlid = controls_all - 1;
 		lpControl = &controlinfo[activectlid];
 		hWnd = lpControl->hWnd_control;
-		if (hWnd != NULL) {
-			if (IsWindowEnabled(hWnd)) {
-				if (lpControl->option & 0x10) {
-					SendMessage(hWnd, EM_SETSEL, 0, -1);
-				}
-				SetFocus(hWnd);
-				return;
+		if (hWnd != NULL && IsWindowEnabled(hWnd)) {
+			if (lpControl->option & 0x10) {
+				SendMessage(hWnd, EM_SETSEL, 0, -1);
 			}
+			SetFocus(hWnd);
+			return;
 		}
 	}
 }

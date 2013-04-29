@@ -13,8 +13,8 @@
 #define IDG_IMGRES			5
 
 // Version Information
-#define HSPFICON_VERSION	1,0,5,0
-#define HSPFICON_VERSION_F	"1.05\0"
+#define HSPFICON_VERSION	1,2,0,0
+#define HSPFICON_VERSION_F	"1.2\0"
 #define COPYRIGHT			"Copyright (C) 2013 ake260\0"
 #define PRODUCT_NAME		"Launcher PE\0"
 #define FILE_NAME			"pecmd.exe\0"

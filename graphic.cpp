@@ -13,8 +13,8 @@
 #define HIMETRIC_INCH   2540
 
 // 画像読み込み
-// LoadPictureOnResource 描画先のデバイスコンテキストハンドル, リソース名, リソースタイプ
-BOOL LoadPictureOnResource(HDC hdc_main, LPCTSTR res, LPCTSTR type)
+// LoadPictureOnResource 描画先のデバイスコンテキストハンドル, リソース名
+BOOL LoadPictureOnResource(HDC hdc_main, LPCTSTR res)
 {
 	IStream *iStream=NULL;
 	IPicture *iPicture;
@@ -27,7 +27,7 @@ BOOL LoadPictureOnResource(HDC hdc_main, LPCTSTR res, LPCTSTR type)
 	int pic_x, pic_y;
 	
 	// リソースからデータの読み出し
-	if (!(hFind = FindResource(hInst, res, type))) return FALSE;
+	if (!(hFind = FindResource(hInst, res, TEXT("GIF")))) return FALSE;
 	if (!(hLoad = LoadResource(hInst, hFind))) return FALSE;
 	if (!(nSize = SizeofResource(hInst, hFind))) return FALSE;
 	if (!(hMem = GlobalAlloc(GHND, nSize))) return FALSE;
@@ -103,6 +103,26 @@ void DrawFileImage(HDC hdc, LPCTSTR szFile, int pos_x, int pos_y)
 	}
 }
 
+// ファイルアイコンを描画 (拡張版？)
+void DrawFileImageEx(HDC hdc, LPCTSTR szFile, LPCTSTR szDir, int pos1_x, int pos1_y, int pos2_x, int pos2_y)
+{
+	TCHAR szPath[MAX_PATH + 1];
+	
+	if (szDir != NULL) {
+		wsprintf(szPath, TEXT("%s\\%s"), szDir, szFile);
+	} else {
+		lstrcpy(szPath, szFile);
+	}
+	
+	// 通常
+	SHFILEINFO shfinfo;
+	ZeroMemory(&shfinfo, sizeof(SHFILEINFO));
+	SHGetFileInfo(szPath, NULL, &shfinfo, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_SMALLICON); // ファイルのアイコンを取得
+	DrawIconEx(hdc, pos1_x, pos1_y, shfinfo.hIcon, 16, 16, 0, NULL, DI_NORMAL); // アイコンを描画1
+	DrawIconEx(hdc, pos2_x, pos2_y, shfinfo.hIcon, 16, 16, 0, NULL, DI_NORMAL); // アイコンを描画2
+	DestroyIcon(shfinfo.hIcon); // アイコンハンドルを破棄 (これをしないと一部環境ではおかしくなるらしい。)
+}
+
 // 塗りつぶし (hspのboxfとほぼ同じ)
 void Boxfill(HDC hdc, int x1, int y1, int x2, int y2, HBRUSH hbr)
 {
@@ -113,3 +133,11 @@ void Boxfill(HDC hdc, int x1, int y1, int x2, int y2, HBRUSH hbr)
 	FillRect(hdc, &rect, hbr);
 }
 
+void DrawStringForImageButton(HDC hdc, LPCTSTR lpszString, int rect1_left, int rect1_top, int rect1_right, int rect1_bottom, int rect2_left, int rect2_top, int rect2_right, int rect2_bottom, BOOL bCenter)
+{
+	RECT rect1 = {rect1_left, rect1_top, rect1_right, rect1_bottom};
+	DrawText(hdc, lpszString, -1, &rect1, (bCenter ? DT_CENTER : DT_LEFT));
+	
+	RECT rect2 = {rect2_left, rect2_top, rect2_right, rect2_bottom};
+	DrawText(hdc, lpszString, -1, &rect2, (bCenter ? DT_CENTER : DT_LEFT));
+}

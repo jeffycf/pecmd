@@ -1,0 +1,79 @@
+// pecmd-jp.rc
+
+// 日本語リソース
+
+#ifndef _WINDOWS_
+#include <windows.h>
+#endif
+
+#include "../resource-lang.h"
+
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+
+STRINGTABLE
+BEGIN
+	// Window Strings
+	IDS_TITLE					" PEのランチャー - シェル"
+	IDS_OPEN_DRIVERINFORMATION	"ドライバ情報ファイル"
+	IDS_OPEN_ALLFILES			"すべてのファイル"
+	IDS_SWITCHPROGRAMS			"プログラムの切り替え : オルト + タブ"
+
+	// MessageBox Titles
+	IDS_ERROR					"エラー"
+	IDS_APPLICATIONERROR		"アプリケーションエラー"
+	IDS_INFORMATION				"情報"
+	
+	// Error Messages
+	IDS_ERROR_COM				"COMの初期化に失敗しました。\n\nアプリケーションを終了します。"
+	IDS_ERROR_WNDCLASS			"ウィンドウクラスの登録に失敗しました。\n\nアプリケーションを終了します。"
+	IDS_ERROR_CREATEWINDOW		"ウィンドウの作成に失敗しました。\n\nアプリケーションを終了します。"
+	IDS_ERROR_GETMSG			"メッセージ処理エラーが発生しました。"
+	IDS_ERROR_LOADPICTURE		"画像の読み込みに失敗しました。"
+	IDS_ERROR_FILENOTFOUND		"ファイルが見つかりません。"
+	IDS_ERROR_SHUTDOWN			"シャットダウンに失敗しました。"
+
+	// Shutdown
+	IDS_SHUTDOWN				"シャットダウンしますか ?"
+	IDS_SHUTDOWN_TITLE			"シェルを終了します"
+
+	// Resolution
+	IDS_RES_FAILEDGETDISPINFO	"現在のディスプレイの情報の取得に失敗しました。"
+	IDS_RES_RESTART				"解像度を有効にするには、コンピュータを再起動させる必要があります。"
+	IDS_RES_BADFLAGS			"渡されたフラグセットが無効です。"
+	IDS_RES_BADPARAM			"渡されたパラメータが無効です。\nパラメータに無効なフラグまたはフラグの組み合わせが含まれている可能性があります。"
+	IDS_RES_FAILED				"解像度の設定に失敗しました。"
+	IDS_RES_BADMODE				"この解像度はサポートされていません。"
+	IDS_RES_NOTUPDATED			"レジストリに設定を書き込めません。"
+
+	// Buttons, 1
+	IDS_BUTTON_7ZIP				"セブンジップ ﾌｧｲﾙﾏﾈｰｼﾞｬ"
+	IDS_BUTTON_COMPUTER			"コンピュータ"
+	IDS_BUTTON_QDIR				"ｷｭｰﾃﾞｨﾚ"
+	IDS_BUTTON_USERSFILER		"ユーザのファイラー"
+
+	// Buttons, 3
+	IDS_BUTTON_REBOOT			"再起動"
+	IDS_BUTTON_SHUTDOWN			"シャットダウン"
+	IDS_BUTTON_COMMANDPROMPT	"コマンドプロンプト"
+	IDS_BUTTON_NOTEPAD			"メモ帳"
+	IDS_BUTTON_REGEDIT			"レジストリエディタ"
+	IDS_BUTTON_DISKPART			"ディスクパート"
+	IDS_BUTTON_LOADDRIVER		"ドライバ読み込み"
+	IDS_BUTTON_MSIME			"MSアイエムイー"
+	IDS_BUTTON_WINDOWSRE		"ウインドウズRE"
+	IDS_BUTTON_INSTALLWINDOWS	"ｳｲﾝﾄﾞｳｽﾞｾﾌﾞﾝのｲﾝｽﾄｰﾙ"
+
+	// Buttons, 4
+	IDS_BUTTON_TRUEIMAGE				"アクロニス トゥルーイメージ ホーム"
+	IDS_BUTTON_DISCWIZARD				"シーゲイト ディスクウィザード"
+	IDS_BUTTON_PARAGONBACKUPANDRECOVERY	"パラゴン バックアップアンドリカバリー"
+	IDS_BUTTON_EASEUSTODOBACKUP			"イーザス トゥードゥーバックアップ"
+	IDS_BUTTON_EASEUSPARTITIONMASTER	"イーザス パーティーションマスター"
+	IDS_BUTTON_MINITOOLPARTITIONWIZARD	"ミニツール ﾊﾟｰﾃｨｰｼｮﾝｳｨｻﾞｰﾄﾞ"
+	IDS_BUTTON_ACRONISDISKDIRECTOR		"アクロニス ﾃﾞｨｽｸﾀﾞｲﾚｸﾀｰ ﾎｰﾑ"
+	IDS_BUTTON_PARAGONPARTITIONMANAGER	"パラゴン ﾊﾟｰﾃｨｰｼｮﾝﾏﾈｰｼﾞｬｰ"
+	IDS_BUTTON_OTHERDISKTOOL			"その他のディスクツール"
+
+	// Buttons, 5
+	IDS_BUTTON_RESCHANGE		"変 更"
+END

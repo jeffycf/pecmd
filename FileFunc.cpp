@@ -7,7 +7,9 @@
 #include "FileFunc.h"
 #include "pecmd.h" 		// 一応includeする (NULLTEXT使用)
 
+TCHAR INI[MAX_PATH + 1] = TEXT("./pecmd.ini");
 TCHAR uNxPath[11], ulPath[_MAX_DIR + _MAX_FNAME + _MAX_EXT + 1], ufFilePath[MAX_PATH + 1], uaFilePath1[MAX_PATH + 1], uaFilePath2[MAX_PATH + 1], uaFilePath3[MAX_PATH + 1], uaFilePath4[MAX_PATH + 1], uaFilePath5[MAX_PATH + 1], uaFilePath6[MAX_PATH + 1], uaFilePath7[MAX_PATH + 1], uaFilePath8[MAX_PATH + 1], uaFilePath9[MAX_PATH + 1];
+TCHAR szSysDir[MAX_PATH + 1], szWinDir[MAX_PATH + 1];
 
 // ファイルの存在確認
 BOOL FileExist(LPCTSTR lpFileName)
@@ -69,19 +71,22 @@ HINSTANCE Execute(HWND hWnd, LPCTSTR lpVerb, LPCTSTR lpFile, LPCTSTR lpParameter
 // iniファイルからデータの読み出し (エラー処理なし)
 void LoadIniData(void)
 {
+	// セクション名
+	TCHAR section[6] = TEXT("pecmd");
+	
 	// キーからデータの読み出し
-	GetPrivateProfileString(TEXT("pecmd"), TEXT("usbpath"), NULLTEXT, uNxPath, sizeof(uNxPath), INI);
-	GetPrivateProfileString(TEXT("pecmd"), TEXT("usblaunch"), NULLTEXT, ulPath, sizeof(ulPath), INI);
-	GetPrivateProfileString(TEXT("pecmd"), TEXT("userfiler"), NULLTEXT, ufFilePath, sizeof(ufFilePath), INI);
-	GetPrivateProfileString(TEXT("pecmd"), TEXT("userapps1"), NULLTEXT, uaFilePath1, sizeof(uaFilePath1), INI);
-	GetPrivateProfileString(TEXT("pecmd"), TEXT("userapps2"), NULLTEXT, uaFilePath2, sizeof(uaFilePath2), INI);
-	GetPrivateProfileString(TEXT("pecmd"), TEXT("userapps3"), NULLTEXT, uaFilePath3, sizeof(uaFilePath3), INI);
-	GetPrivateProfileString(TEXT("pecmd"), TEXT("userapps4"), NULLTEXT, uaFilePath4, sizeof(uaFilePath4), INI);
-	GetPrivateProfileString(TEXT("pecmd"), TEXT("userapps5"), NULLTEXT, uaFilePath5, sizeof(uaFilePath5), INI);
-	GetPrivateProfileString(TEXT("pecmd"), TEXT("userapps6"), NULLTEXT, uaFilePath6, sizeof(uaFilePath6), INI);
-	GetPrivateProfileString(TEXT("pecmd"), TEXT("userapps7"), NULLTEXT, uaFilePath7, sizeof(uaFilePath7), INI);
-	GetPrivateProfileString(TEXT("pecmd"), TEXT("userapps8"), NULLTEXT, uaFilePath8, sizeof(uaFilePath8), INI);
-	GetPrivateProfileString(TEXT("pecmd"), TEXT("userapps9"), NULLTEXT, uaFilePath9, sizeof(uaFilePath9), INI);
+	GetPrivateProfileString(section, TEXT("usbpath"), NULLTEXT, uNxPath, sizeof(uNxPath), INI);
+	GetPrivateProfileString(section, TEXT("usblaunch"), NULLTEXT, ulPath, sizeof(ulPath), INI);
+	GetPrivateProfileString(section, TEXT("userfiler"), NULLTEXT, ufFilePath, sizeof(ufFilePath), INI);
+	GetPrivateProfileString(section, TEXT("userapps1"), NULLTEXT, uaFilePath1, sizeof(uaFilePath1), INI);
+	GetPrivateProfileString(section, TEXT("userapps2"), NULLTEXT, uaFilePath2, sizeof(uaFilePath2), INI);
+	GetPrivateProfileString(section, TEXT("userapps3"), NULLTEXT, uaFilePath3, sizeof(uaFilePath3), INI);
+	GetPrivateProfileString(section, TEXT("userapps4"), NULLTEXT, uaFilePath4, sizeof(uaFilePath4), INI);
+	GetPrivateProfileString(section, TEXT("userapps5"), NULLTEXT, uaFilePath5, sizeof(uaFilePath5), INI);
+	GetPrivateProfileString(section, TEXT("userapps6"), NULLTEXT, uaFilePath6, sizeof(uaFilePath6), INI);
+	GetPrivateProfileString(section, TEXT("userapps7"), NULLTEXT, uaFilePath7, sizeof(uaFilePath7), INI);
+	GetPrivateProfileString(section, TEXT("userapps8"), NULLTEXT, uaFilePath8, sizeof(uaFilePath8), INI);
+	GetPrivateProfileString(section, TEXT("userapps9"), NULLTEXT, uaFilePath9, sizeof(uaFilePath9), INI);
 
 	// 小文字化
 	CharLower(uNxPath);
@@ -107,4 +112,11 @@ int FilePathToFileName(LPCTSTR lpFilePath, TCHAR *lpFileName)
 	
 	return 0;
 	
+}
+
+// システムディレクトリを取得
+void GetSysDir(void)
+{
+	GetSystemDirectory(szSysDir, MAX_PATH);
+	GetWindowsDirectory(szWinDir, MAX_PATH);
 }

@@ -15,6 +15,8 @@ build/
 [Bb]in/
 [Oo]oj/
 [Pp]ack/
+[Ll]ang/Release
+[Ll]ang/x64
 
 *_i.c
 *_p.c
@@ -41,6 +43,12 @@ ipch/
 *.ncb
 *.opensdf
 *.sdf
+
+[Ll]ang/ipch/
+[Ll]ang/*.aps
+[Ll]ang/*.ncb
+[Ll]ang/*.opensdf
+[Ll]ang/*.sdf
 
 # Visual Studio profiler
 *.psess

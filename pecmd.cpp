@@ -7,7 +7,7 @@
 	
 	英語はめちゃくちゃ
 
-	Release でのビルドをお勧めします。(Release - Japanese を選択すると、日本語でビルドします)
+	Release でのビルドをお勧めします。
 
 	そのうち、言語ファイルを個別に用意して、対応できるようにしたい。
 
@@ -22,6 +22,7 @@
 #include "FileFunc.h"
 #include "pecmd.h"
 #include "res.h"
+#include "lang.h"
 
 // ウィンドウクラス名
 #define PECMD_WNDCLASSNAME TEXT("pecmd")
@@ -36,14 +37,17 @@ int WINAPI _tWinMain(HINSTANCE hCurInst, HINSTANCE, LPTSTR lpszCmdLine, int nCmd
 {
 	MSG msg;
 	BOOL bRet;
+	int filedlg_flag = 0;
+	
+	if (!lstrcmpi(lpszCmdLine, TEXT("filedialog")))
+		filedlg_flag = 1;
+	
+	// 言語ファイルの読み込み
+	LoadLangFile(filedlg_flag);
 	
 	// COMの初期化 一応入れる
 	if (FAILED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED))) {
-#ifdef PECMD_JAPANESE
-		MessageBox(NULL, TEXT("COMの初期化に失敗しました。\n\nアプリケーションを終了します。"), TEXT("アプリケーションエラー"), MB_OK | MB_ICONERROR);
-#else
-		MessageBox(NULL, TEXT("Failed to initialize COM.\n\nExit this application."), TEXT("Application Error"), MB_OK | MB_ICONERROR);
-#endif
+		MessageBox(NULL, langStr.szErrorCOM, langStr.szAppErrorTitle, MB_OK | MB_ICONERROR);
 		return 2;
 	}
 	
@@ -51,13 +55,9 @@ int WINAPI _tWinMain(HINSTANCE hCurInst, HINSTANCE, LPTSTR lpszCmdLine, int nCmd
 	OleInitialize(NULL);
 	
 	// ファイル選択ダイアログ
-	if (!lstrcmpi(lpszCmdLine, TEXT("filedialog"))) {
+	if (filedlg_flag) {
 		TCHAR szFilePath[MAX_PATH + 1] = {0};
-#ifdef PECMD_JAPANESE
-		FileOpenDialog(NULL, TEXT("すべてのファイル (*.*)\0*.*\0\0"), NULLTEXT, szFilePath);
-#else
-		FileOpenDialog(NULL, TEXT("All Files (*.*)\0*.*\0\0"), NULLTEXT, szFilePath);
-#endif
+		FileOpenDialog(NULL, langStr.szAllFiles, NULLTEXT, szFilePath);
 		OleUninitialize();
 		CoUninitialize();
 		return 0;
@@ -65,24 +65,16 @@ int WINAPI _tWinMain(HINSTANCE hCurInst, HINSTANCE, LPTSTR lpszCmdLine, int nCmd
 	
 	// ウィンドウクラスの登録
 	if (!InitApp(hCurInst)) {
-#ifdef PECMD_JAPANESE
-		MessageBox(NULL, TEXT("ウィンドウクラスの登録に失敗しました。\n\nアプリケーションを終了します。"), TEXT("アプリケーションエラー"), MB_OK | MB_ICONERROR);
-#else
-		MessageBox(NULL, TEXT("Failed to register the window class.\n\nExit this application."), TEXT("Application Error"), MB_OK | MB_ICONERROR);
-#endif
+		MessageBox(NULL, langStr.szErrorWndClass, langStr.szAppErrorTitle, MB_OK | MB_ICONERROR);
 		return 2;
 	}
 	
 	// ウィンドウの作成
 	if (!InitInstance(hCurInst, nCmdShow)) {
-#ifdef PECMD_JAPANESE
-		MessageBox(NULL, TEXT("ウィンドウの作成に失敗しました。\n\nアプリケーションを終了します。"), TEXT("アプリケーションエラー"), MB_OK | MB_ICONERROR);
-#else
-		MessageBox(NULL, TEXT("Failed to create the window.\n\nExit this application."), TEXT("Application Error"), MB_OK | MB_ICONERROR);
-#endif
+		MessageBox(NULL, langStr.szErrorCreateWindow, langStr.szAppErrorTitle, MB_OK | MB_ICONERROR);
 		return 2;
 	}
-
+	
 	// startnet2.cmdが存在する場合は実行する
 	if (FileExist(TEXT("startnet2.cmd")))
 		Execute(NULL, NULL, TEXT("startnet2.cmd"), NULL, NULL, SW_SHOWMINIMIZED);
@@ -90,16 +82,12 @@ int WINAPI _tWinMain(HINSTANCE hCurInst, HINSTANCE, LPTSTR lpszCmdLine, int nCmd
 	// メッセージを取得
 	while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0) {
 		if (bRet == -1) {
-#ifdef PECMD_JAPANESE
-			MessageBox(msg.hwnd, TEXT("メッセージ処理エラーが発生しました。"), TEXT("アプリケーションエラー"), MB_OK | MB_ICONERROR | MB_TOPMOST);
-#else
-			MessageBox(msg.hwnd, TEXT("Message processing error has occurred."), TEXT("Application Error"), MB_OK | MB_ICONERROR | MB_TOPMOST);
-#endif
+			MessageBox(msg.hwnd, langStr.szErrorGetMsg, langStr.szAppErrorTitle, MB_OK | MB_ICONERROR | MB_TOPMOST);
 			break;
 		} else {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-
+			
 			// ここでWM_KEYDOWNを処理 WndProc内だと一回しか来ないようなので
 			if (msg.message == WM_KEYDOWN) {
 				switch (msg.wParam)
@@ -168,11 +156,7 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
 	
 	//ウィンドウ作成
 	hWnd = CreateWindowEx(0, PECMD_WNDCLASSNAME,
-#ifdef PECMD_JAPANESE
-			TEXT(" PEのランチャー - シェル"),
-#else
-			TEXT(" Launcher PE - Shell"),
-#endif
+			langStr.szTitle,
 			WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX,
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
@@ -195,20 +179,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	HDC hdc;
 	static LPCTSTR lpszMesStr1 = TEXT("or"), lpszMesStr2 = TEXT("x");
-#ifdef PECMD_JAPANESE
-	static LPCTSTR lpszMesStr3 = TEXT("プログラムの切り替え : オルト + タブ");
-#else
-	static LPCTSTR lpszMesStr3 = TEXT("Switch Programs : Alt + Tab");
-#endif
 	static HFONT hFont; // フォントハンドル
-	static TCHAR szSystemDir[MAX_PATH + 1];
-
+	
 	switch (msg)
 	{
 		case WM_CREATE:
 			{
 				// コントロールクラス
 				ctls = new Controls;
+				
+				// システムディレクトリを取得
+				GetSysDir();
 				
 				// INIファイルの情報を読み込み
 				LoadIniData();
@@ -218,21 +199,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					MessageBox(NULL, TEXT("Fatal Error."), TEXT("Error"), MB_OK | MB_ICONERROR);
 					return -1;
 				}
-
+				
 				// フォントハンドル取得
 				hFont = CreateFont(
 					-12, 0, 0, 0, FW_NORMAL,
 					FALSE, FALSE, FALSE,
-#ifdef PECMD_JAPANESE
-					SHIFTJIS_CHARSET,
-#else
 					DEFAULT_CHARSET,
-#endif
 					OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, 0, NULLTEXT
 				);
-
-				// システムDirectoryを取得
-				GetSystemDirectory(szSystemDir, MAX_PATH + 1);
 			}
 			break;
 		
@@ -241,12 +215,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				// ペイント処理
 				hdc = BeginPaint(hWnd, &ps);
 				SelectObject(hdc, hFont); // フォントを選択
-				if (ctls->bSetRes) {
-					// SetResが使用できる場合
-					TextOut(hdc, 138, 265, lpszMesStr1, lstrlen(lpszMesStr1));
-					TextOut(hdc, 190, 265, lpszMesStr2, lstrlen(lpszMesStr2));
-				}
-				TextOut(hdc, 15, 300, lpszMesStr3, lstrlen(lpszMesStr3));
+				TextOut(hdc, 138, 265, lpszMesStr1, lstrlen(lpszMesStr1));
+				TextOut(hdc, 190, 265, lpszMesStr2, lstrlen(lpszMesStr2));
+				TextOut(hdc, 15, 300, langStr.szSwitchPrograms, lstrlen(langStr.szSwitchPrograms));
 				EndPaint(hWnd, &ps);
 			}
 			break;
@@ -361,7 +332,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				case IDC_COMMANDPROMPT:
 					// Command Prompt
 					// Current Directoryは、システム固定で(いろいろと狂うと個人的に気持ち悪いしめんどくさい)
-					Execute(NULL, NULL, TEXT("cmd.exe"), NULL, szSystemDir, SW_SHOWDEFAULT);
+					Execute(NULL, NULL, TEXT("cmd.exe"), NULL, szSysDir, SW_SHOWDEFAULT);
 					break;
 					
 				case IDC_NOTEPAD:
@@ -384,22 +355,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 						// Load Driver
 						TCHAR szFilePath[MAX_PATH + 1] = {0};
 						TCHAR szDrvLoadCmd[MAX_PATH + 1];
-#ifdef PECMD_JAPANESE
-						if (FileOpenDialog(NULL, TEXT("ドライバ情報ファイル (*.inf)\0*.inf\0すべてのファイル (*.*)\0*.*\0\0"), NULLTEXT, szFilePath)) {
-#else
-						if (FileOpenDialog(NULL, TEXT("Driver Information File (*.inf)\0*.inf\0All Files (*.*)\0*.*\0\0"), NULLTEXT, szFilePath)) {
-#endif
+						
+						if (FileOpenDialog(NULL, langStr.szDrvLoadInfo, NULLTEXT, szFilePath)) {
 							if (FileExist(szFilePath) == TRUE) {
 								// Driver Information Fileが存在する場合
 								wsprintf(szDrvLoadCmd, TEXT("\"%s\""), szFilePath);
 								Execute(NULL, NULL, TEXT("drvload.exe"), szDrvLoadCmd, NULL, SW_SHOWDEFAULT);
 							} else {
 								// Driver Information Fileが存在しない場合
-#ifdef PECMD_JAPANESE
-								MessageBox(NULL, TEXT("ファイルが見つかりません。"), TEXT("エラー"), MB_OK | MB_ICONERROR);
-#else
-								MessageBox(NULL, TEXT("File not found."), TEXT("Error"), MB_OK | MB_ICONERROR);
-#endif
+								MessageBox(hWnd, langStr.szErrorFileNotFound, langStr.szErrorTitle, MB_OK | MB_ICONERROR);
 							}
 						}
 					}
@@ -526,19 +490,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		case WM_CLOSE:
 			{
 				// 終了処理
-#ifdef PECMD_JAPANESE
-				if (MessageBox(hWnd, TEXT("シャットダウンしますか ?"), TEXT("シェルを終了します"), MB_YESNO | MB_ICONQUESTION) == IDYES) {
-#else
-				if (MessageBox(hWnd, TEXT("Shutdown now ?"), TEXT("Shell-Application will exit"), MB_YESNO | MB_ICONQUESTION) == IDYES) {
-#endif
+				if (MessageBox(hWnd, langStr.szShutdown, langStr.szShutdownTitle, MB_YESNO | MB_ICONQUESTION) == IDYES) {
 					// wpeutl.exeを実行
 					if ((int)Execute(NULL, NULL, TEXT("wpeutil.exe"), TEXT("shutdown"), NULL, SW_SHOWDEFAULT) < 33) {
 						// wpeutil.exeの起動に失敗 通常はこの時点でシャットダウンされている
-#ifdef PECMD_JAPANESE
-						MessageBox(hWnd, TEXT("シャットダウンに失敗しました。"), TEXT("エラー"), MB_OK | MB_ICONERROR);
-#else
-						MessageBox(hWnd, TEXT("Failed to shutdown."), TEXT("Error"), MB_OK | MB_ICONERROR);
-#endif
+						MessageBox(hWnd, langStr.szErrorShutdown, langStr.szErrorTitle, MB_OK | MB_ICONERROR);
 					} else
 						break; // wpeutil.exeの起動に成功したら、あとはPEが自動で電源を切ってくれる。
 						       // (このままこのアプリケーションが終了すると、シャットダウンのはずが再起動になってしまうかもしれないので。)
@@ -566,4 +522,3 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	
 	return 0;
 }
-

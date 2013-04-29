@@ -41,20 +41,15 @@ public:
 	void DrawImageButtonOnOwnerDraw(HWND hWnd_button, HDC hdc_button, UINT state);
 	void SetTabKeyFocus(int key_flag);
 	
-	//////////////
-	// Data
-	//
-	
-	// SetRes‚Ìƒtƒ‰ƒO
-	BOOL bSetRes;
-	
 private:
 	//////////////
 	// Functions
 	//
 	
+	HWND CreateButton(HWND hWnd, HINSTANCE hInst, int pos_x, int pos_y, int size_x, int size_y, long id);
 	void SetImageButtonInfo(int id, HWND hWnd_button, int hdc_imgid, int pos_x1, int pos_y1, int pos_x2, int pos_y2, int pos_x3, int pos_y3);
 	void LoadButtonImages(HWND hWnd, int id);
+	void ShowLoadPictureError(int id);
 	void DrawImageButton(CONTROLINFO *lpControlInfo, HDC hdc_button);
 	
 	//////////////

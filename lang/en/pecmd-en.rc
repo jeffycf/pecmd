@@ -1,0 +1,79 @@
+// pecmd-en.rc
+
+// English Resource
+
+#ifndef _WINDOWS_
+#include <windows.h>
+#endif
+
+#include "../resource-lang.h"
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+STRINGTABLE
+BEGIN
+	// Window Strings
+	IDS_TITLE					" Launcher PE - Shell"
+	IDS_OPEN_DRIVERINFORMATION	"Driver Information File"
+	IDS_OPEN_ALLFILES			"All Files"
+	IDS_SWITCHPROGRAMS			"Switch Programs : Alt + Tab"
+
+	// MessageBox Titles
+	IDS_ERROR					"Error"
+	IDS_APPLICATIONERROR		"Application Error"
+	IDS_INFORMATION				"Information"
+
+	// Error Messages
+	IDS_ERROR_COM				"Failed to initialize COM.\n\nExit this application."
+	IDS_ERROR_WNDCLASS			"Failed to register the window class.\n\nExit this application."
+	IDS_ERROR_CREATEWINDOW		"Failed to create the window.\n\nExit this application."
+	IDS_ERROR_GETMSG			"Message processing error has occurred."
+	IDS_ERROR_LOADPICTURE		"Failed to load the image. "
+	IDS_ERROR_FILENOTFOUND		"File not found."
+	IDS_ERROR_SHUTDOWN			"Failed to shutdown."
+
+	// Shutdown
+	IDS_SHUTDOWN				"Shutdown now ?"
+	IDS_SHUTDOWN_TITLE			"Shell-Application will exit"
+
+	// Resolution
+	IDS_RES_FAILEDGETDISPINFO	"Failed to get information of the current display."
+	IDS_RES_RESTART				"To turn on the resolution, you may need to restart the computer."
+	IDS_RES_BADFLAGS			"Set of flag passed is invalid."
+	IDS_RES_BADPARAM			"Parameter passed is invalid. \nThere is a possibility that the combination of flag or flag contains an invalid parameter."
+	IDS_RES_FAILED				"Failed to change the resolution."
+	IDS_RES_BADMODE				"This resolution is not supported."
+	IDS_RES_NOTUPDATED			"Cannot write to the registry settings."
+
+	// Buttons, 1
+	IDS_BUTTON_7ZIP				"7-Zip File Manager"
+	IDS_BUTTON_COMPUTER			"Computer"
+	IDS_BUTTON_QDIR				"Q-Dir"
+	IDS_BUTTON_USERSFILER		"User's  Filer"
+
+	// Buttons, 3
+	IDS_BUTTON_REBOOT			"Restart WinPE"
+	IDS_BUTTON_SHUTDOWN			"Shutdown WinPE"
+	IDS_BUTTON_COMMANDPROMPT	"Command Prompt"
+	IDS_BUTTON_NOTEPAD			" Notepad"
+	IDS_BUTTON_REGEDIT			"Registry Editor"
+	IDS_BUTTON_DISKPART			" Diskpart"
+	IDS_BUTTON_LOADDRIVER		" Load Driver"
+	IDS_BUTTON_MSIME			" MS-IME"
+	IDS_BUTTON_WINDOWSRE		" Windows RE"
+	IDS_BUTTON_INSTALLWINDOWS	"Install Windows 7"
+
+	// Buttons, 4
+	IDS_BUTTON_TRUEIMAGE				"Acronis True Image Home"
+	IDS_BUTTON_DISCWIZARD				"Seagate DiscWizard"
+	IDS_BUTTON_PARAGONBACKUPANDRECOVERY	"Paragon Backup & Recovery"
+	IDS_BUTTON_EASEUSTODOBACKUP			"EaseUS Todo Backup"
+	IDS_BUTTON_EASEUSPARTITIONMASTER	"EaseUS Partition Master"
+	IDS_BUTTON_MINITOOLPARTITIONWIZARD	"MiniTool Partition Wizard"
+	IDS_BUTTON_ACRONISDISKDIRECTOR		"Acronis Disk Director Home"
+	IDS_BUTTON_PARAGONPARTITIONMANAGER	"Paragon Partition Manager"
+	IDS_BUTTON_OTHERDISKTOOL			"Other Disk Tools"
+
+	// Buttons, 5
+	IDS_BUTTON_RESCHANGE		"Change"
+END

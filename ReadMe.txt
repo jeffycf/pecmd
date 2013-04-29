@@ -1,4 +1,4 @@
-
+﻿
  Launcher PE (x64対応) ソースコード
 
   　これは、Launcher PE (x64対応) のソースコードです。Visual Studio 2010 用の
@@ -8,7 +8,7 @@
  *** 構成一覧 ***
 
    Debug              : デバッグビルド (うまく動かない？)
-   Release            : リリースビルド (pecmd.exe)
-   Release - Japanese : リリースビルド 日本語版 (pecmd_jp.exe)
+   Release            : リリースビルド
 
   プラットフォームは、それぞれWin32(32bit)とx64があります。
+  言語ファイル(dll)のソースコードは、langフォルダ内にあります。
