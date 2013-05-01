@@ -725,7 +725,7 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 			DrawStringForImageButton(hdc_mem[4], TEXT("800x600"), 0, 3, 61, 15, 61, 3, 122, 15, TRUE);
 			DrawStringForImageButton(hdc_mem[4], TEXT("1024x768"), 0, 19, 61, 31, 61, 19, 122, 31, TRUE);
 			DrawStringForImageButton(hdc_mem[4], TEXT("1280x1024"), 0, 35, 61, 47, 61, 35, 122, 47, TRUE);
-			DrawStringForImageButton(hdc_mem[4], TEXT("1900x1080"), 0, 51, 61, 63, 61, 51, 122, 63, TRUE);
+			DrawStringForImageButton(hdc_mem[4], TEXT("1920x1080"), 0, 51, 61, 63, 61, 51, 122, 63, TRUE);
 			DrawStringForImageButton(hdc_mem[4], langStr.szBtnResChange, 15, 67, 61, 79, 61, 67, 105, 79, TRUE);
 			
 			break;
