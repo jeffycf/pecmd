@@ -10,7 +10,6 @@
 #define IDG_IMGDISK			2
 #define IDG_IMGTOOLS		3
 #define IDG_IMGAPPS			4
-#define IDG_IMGRES			5
 
 // Version Information
 #define HSPFICON_VERSION	1,2,0,0

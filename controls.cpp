@@ -688,12 +688,28 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 		
 		case 5:
 			// ‰æ‘œ5
+			HBRUSH hBrush_2;
+			hBrush_2 = CreateSolidBrush(RGB(252, 186, 148));
+			
 			hdc_mem[4] = CreateCompatibleDC(NULL);
 			hBitmap = CreateCompatibleBitmap(hdc, 122, 80);
 			SelectObject(hdc_mem[4], hBitmap);
 			Boxfill(hdc_mem[4], 0, 0, 122, 80, hBrush_1); // “h‚è‚Â‚Ô‚µ
-			if (!LoadPictureOnResource(hdc_mem[4], MAKEINTRESOURCE(IDG_IMGRES)))
-				ShowLoadPictureError(5);
+			
+			// ˜g‚ð•`‰æ
+			SelectObject(hdc_mem[4], hBrush_1);
+			RoundRect(hdc_mem[4], 0, 0, 61, 16, 6, 6);
+			RoundRect(hdc_mem[4], 0, 16, 61, 32, 6, 6);
+			RoundRect(hdc_mem[4], 0, 32, 61, 48, 6, 6);
+			RoundRect(hdc_mem[4], 0, 48, 61, 64, 6, 6);
+			RoundRect(hdc_mem[4], 16, 64, 61, 80, 6, 6);
+			SelectObject(hdc_mem[4], hBrush_2);
+			RoundRect(hdc_mem[4], 61, 0, 122, 16, 6, 6);
+			RoundRect(hdc_mem[4], 61, 16, 122, 32, 6, 6);
+			RoundRect(hdc_mem[4], 61, 32, 122, 48, 6, 6);
+			RoundRect(hdc_mem[4], 61, 48, 122, 64, 6, 6);
+			RoundRect(hdc_mem[4], 61, 64, 106, 80, 6, 6);
+			SelectObject(hdc_mem[4], hBrush_1);
 			
 			// •¶Žš‚ð•`‰æ
 			SelectObject(hdc_mem[4], hGuiFont);
