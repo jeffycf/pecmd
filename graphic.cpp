@@ -136,8 +136,8 @@ void Boxfill(HDC hdc, int x1, int y1, int x2, int y2, HBRUSH hbr)
 void DrawStringForImageButton(HDC hdc, LPCTSTR lpszString, int rect1_left, int rect1_top, int rect1_right, int rect1_bottom, int rect2_left, int rect2_top, int rect2_right, int rect2_bottom, BOOL bCenter)
 {
 	RECT rect1 = {rect1_left, rect1_top, rect1_right, rect1_bottom};
-	DrawText(hdc, lpszString, -1, &rect1, (bCenter ? DT_CENTER : DT_LEFT));
+	DrawText(hdc, lpszString, -1, &rect1, (bCenter ? DT_CENTER : DT_LEFT) | DT_NOCLIP);
 	
 	RECT rect2 = {rect2_left, rect2_top, rect2_right, rect2_bottom};
-	DrawText(hdc, lpszString, -1, &rect2, (bCenter ? DT_CENTER : DT_LEFT));
+	DrawText(hdc, lpszString, -1, &rect2, (bCenter ? DT_CENTER : DT_LEFT) | DT_NOCLIP);
 }

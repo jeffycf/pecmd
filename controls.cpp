@@ -110,7 +110,6 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	
 	// ファイルオープンダイアログ, File Open Dialog
 	hFileOpenButton = CreateButton(hWnd, hInst, 213, 20, 20, 20, IDC_FILEOPENDLG);
-	controls_all++;
 	
 	ctl_id = 0;
 	
@@ -170,10 +169,8 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		backuptool_pos = 160;
 	}
 	// バックアップツールのボタンを作成
-	if (ctl_id) {
+	if (ctl_id)
 		hBackupToolButton = CreateButton(hWnd, hInst, 25, 50, 210, 20, ctl_id);
-		controls_all++;
-	}
 	
 	ctl_id = 0;
 	
@@ -204,51 +201,41 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		partitiontool_pos = 160;
 	}
 	// パーティションツールのボタンを作成
-	if (ctl_id) {
+	if (ctl_id)
 		hPartitionToolButton = CreateButton(hWnd, hInst, 25, 80, 210, 20, ctl_id);
-		controls_all++;
-	}
 	
 	// Windows Tools
 	
 	// Command Prompt (コマンドプロンプト)
 	hCommandPromptButton = CreateButton(hWnd, hInst, 10, 130, 130, 20, IDC_COMMANDPROMPT);
-	controls_all++;
 	
 	// Notepad (メモ帳)
 	hNotepadButton = CreateButton(hWnd, hInst, 145, 130, 130, 20, IDC_NOTEPAD);
-	controls_all++;
 	
 	// Registry Editor (レジストリエディター)
 	hRegistryEditorButton = CreateButton(hWnd, hInst, 10, 155, 130, 20, IDC_REGISTRYEDITOR);
-	controls_all++;
 	
 	// Diskpart
 	hDiskpartButton = CreateButton(hWnd, hInst, 145, 155, 130, 20, IDC_DISKPART);
-	controls_all++;
 	
 	// Load Driver (ドライバ読み込み)
 	hLoadDriverButton = CreateButton(hWnd, hInst, 10, 180, 130, 20, IDC_LOADDRIVER);
-	controls_all++;
 	
 	// MS-IME
 	if (FileExist(TEXT("imecmd.cmd"))) {
 		hMSIMEButton = CreateButton(hWnd, hInst, 145, 180, 130, 20, IDC_MSIME);
-		controls_all++;
 		wintools |= 0x10;
 	}
 	
 	// Windows RE
 	if (FileExist(TEXT("X:\\sources\\recovery\\recenv.exe"))) {
 		hWindowsREButton = CreateButton(hWnd, hInst, 10, 205, 130, 20, IDC_WINDOWSRE);
-		controls_all++;
 		wintools |= 0x20;
 	}
 	
 	// Install Windows (NT6.x)
 	if (FileExist(TEXT("X:\\sources\\setup.exe"))) {
 		hInstallWindowsButton = CreateButton(hWnd, hInst, 145, 205, 130, 20, IDC_INSTALLWINDOWS);
-		controls_all++;
 		wintools |= 0x40;
 	}
 	
@@ -257,70 +244,60 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	// App1
 	if (FileExist(uaFilePath1)) {
 		hApp1Button = CreateButton(hWnd, hInst, 10, 230, 20, 20, IDC_APP1);
-		controls_all++;
 		users_app |= 0x1;
 	}
 	
 	// App2
 	if (FileExist(uaFilePath2)) {
 		hApp2Button = CreateButton(hWnd, hInst, 35, 230, 20, 20, IDC_APP2);
-		controls_all++;
 		users_app |= 0x2;
 	}
 	
 	// App3
 	if (FileExist(uaFilePath3)) {
 		hApp3Button = CreateButton(hWnd, hInst, 60, 230, 20, 20, IDC_APP3);
-		controls_all++;
 		users_app |= 0x4;
 	}
 	
 	// App4
 	if (FileExist(uaFilePath4)) {
 		hApp4Button = CreateButton(hWnd, hInst, 85, 230, 20, 20, IDC_APP4);
-		controls_all++;
 		users_app |= 0x8;
 	}
 	
 	// App5
 	if (FileExist(uaFilePath5)) {
-		hApp5Button = CreateButton(hWnd, hInst, 110, 230, 20, 20, IDC_APP6);
-		controls_all++;
+		hApp5Button = CreateButton(hWnd, hInst, 110, 230, 20, 20, IDC_APP5);
 		users_app |= 0x10;
 	}
 	
 	// App6
 	if (FileExist(uaFilePath6)) {
-		hApp6Button = CreateButton(hWnd, hInst, 135, 230, 20, 20, IDC_APP7);
-		controls_all++;
+		hApp6Button = CreateButton(hWnd, hInst, 135, 230, 20, 20, IDC_APP6);
 		users_app |= 0x20;
 	}
 	
 	// App7
 	if (FileExist(uaFilePath7)) {
 		hApp7Button = CreateButton(hWnd, hInst, 160, 230, 20, 20, IDC_APP7);
-		controls_all++;
 		users_app |= 0x40;
 	}
 	
 	// App8
 	if (FileExist(uaFilePath8)) {
 		hApp8Button = CreateButton(hWnd, hInst, 185, 230, 20, 20, IDC_APP8);
-		controls_all++;
 		users_app |= 0x80;
 	}
 	
 	// App9
 	if (FileExist(uaFilePath9)) {
 		hApp9Button = CreateButton(hWnd, hInst, 210, 230, 20, 20, IDC_APP9);
-		controls_all++;
 		users_app |= 0x100;
 	}
 	
 	// PStart or Custom USB Memory Launcher
 	if (!lstrcmp(uNxPath, TEXT("true"))) {
 		hPStartButton = CreateButton(hWnd, hInst, 235, 230, 20, 20, IDC_PSTART);
-		controls_all++;
 	}
 	
 	// 解像度変更
@@ -364,15 +341,13 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 
 	// ResChange
 	hResChangeButton = CreateButton(hWnd, hInst, 237, 263, 45, 16, IDC_RESCHANGE);
-	controls_all += 7;
+	controls_all += 2;
 	
 	// Reboot WinPE
 	hRebootButton = CreateButton(hWnd, hInst, 10, 325, 130, 20, IDC_REBOOTWINPE);
-	controls_all++;
 	
 	// Shutdown WinPE
 	hShutdownButton = CreateButton(hWnd, hInst, 150, 325, 130, 20, IDC_SHUTDOWNWINPE);
-	controls_all++;
 	
 	// 作成されたボタンの数だけ配列を確保
 	controlinfo = (CONTROLINFO *)malloc(sizeof(CONTROLINFO) * controls_all);
@@ -527,6 +502,7 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 // ボタンを作成
 HWND Controls::CreateButton(HWND hWnd, HINSTANCE hInst, int pos_x, int pos_y, int size_x, int size_y, long id)
 {
+	controls_all++;
 	return CreateWindowEx(0,
 		TEXT("BUTTON"), NULLTEXT, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 		pos_x, pos_y, size_x, size_y,
