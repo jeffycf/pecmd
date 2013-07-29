@@ -52,10 +52,12 @@ typedef struct LANGSTRING
 	TCHAR szBtnDiscWizard[51];
 	TCHAR szBtnParagonBackupAndRecovery[51];
 	TCHAR szBtnEaseUSTodoBackup[51];
+	TCHAR szBtnAomeiBackupper[51];
 	TCHAR szBtnEaseUSPartitionMaster[51];
 	TCHAR szBtnMiniToolPartitionWizard[51];
 	TCHAR szBtnAcronisDiskDirector[51];
 	TCHAR szBtnParagonPartitionManager[51];
+	TCHAR szBtnAomeiPartitionAssistant[51];
 	TCHAR szBtnOtherDiskTool[51];
 
 	TCHAR szBtnResChange[51];

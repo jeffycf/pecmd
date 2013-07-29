@@ -163,10 +163,15 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 		ctl_id = IDC_EASEUSTODOBACKUP25WIN;
 		backuptool_pos = 60;
 	}
+	else if (FileExist(TEXT("X:\\Program Files\\AomeiBackupper\\Backupper.exe"))) {
+		// AOMEI Backupper
+		ctl_id = IDC_AOMEIBACKUPPER;
+		backuptool_pos = 80;
+	}
 	else if (FileExist(TEXT("X:\\Program Files\\otherbpt.lnk"))) {
 		// 他のバックアップツール
 		ctl_id = IDC_OTHERBACKUPTOOL;
-		backuptool_pos = 160;
+		backuptool_pos = 200;
 	}
 	// バックアップツールのボタンを作成
 	if (ctl_id)
@@ -178,27 +183,32 @@ int Controls::CreateControls(HWND hWnd, HINSTANCE hInst)
 	if (FileExist(TEXT("X:\\Program Files\\EPM\\bin\\epm0.lnk"))) {
 		// EaseUS Partition Master
 		ctl_id = IDC_EASEUSPARTITIONMASTER;
-		partitiontool_pos = 80;
+		partitiontool_pos = 100;
 	}
 	else if (FileExist(TEXT("X:\\Program Files\\MPW\\PartitionWizard.lnk"))) {
 		// Partition Wizard
 		ctl_id = IDC_PARTITIONWIZARD;
-		partitiontool_pos = 100;
+		partitiontool_pos = 120;
 	}
 	else if (FileExist(TEXT("X:\\Program Files\\Acronis\\DiskDirector\\trueimage_starter.exe"))) {
 		// Acronis Disk Director
 		ctl_id = IDC_ACRODISKDIRECTOR11;
-		partitiontool_pos = 120;
+		partitiontool_pos = 140;
 	}
 	else if (FileExist(TEXT("X:\\Program Files\\PPM\\program\\launcher.lnk"))) {
 		// Paragon Partition Manager
 		ctl_id = IDC_PARAGPARTITIONMANAGER;
-		partitiontool_pos = 140;
+		partitiontool_pos = 160;
+	}
+	else if (FileExist(TEXT("X:\\Program Files\\PA\\PartAssist.exe"))) {
+		// AOMEI Partition Assistant
+		ctl_id = IDC_AOMEIPARTITIONASSISTANT;
+		partitiontool_pos = 180;
 	}
 	else if (FileExist(TEXT("X:\\Program Files\\otherptt.lnk"))) {
 		// 他のパーティションツール
 		ctl_id = IDC_OTHERPARTITIONTOOL;
-		partitiontool_pos = 160;
+		partitiontool_pos = 200;
 	}
 	// パーティションツールのボタンを作成
 	if (ctl_id)
@@ -571,7 +581,7 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 		case 2:
 			// 画像2
 			hdc_mem[1] = CreateCompatibleDC(NULL);
-			hBitmap = CreateCompatibleBitmap(hdc, 420, 180);
+			hBitmap = CreateCompatibleBitmap(hdc, 420, 220);
 			SelectObject(hdc_mem[1], hBitmap);
 			Boxfill(hdc_mem[1], 0, 0, 420, 180, hBrush_1); // 塗りつぶし
 			if (!LoadPictureOnResource(hdc_mem[1], MAKEINTRESOURCE(IDG_IMGDISK)))
@@ -584,11 +594,13 @@ void Controls::LoadButtonImages(HWND hWnd, int id)
 			DrawStringForImageButton(hdc_mem[1], langStr.szBtnDiscWizard, 27, 25, 210, 37, 237, 25, 420, 37, FALSE);
 			DrawStringForImageButton(hdc_mem[1], langStr.szBtnParagonBackupAndRecovery, 27, 45, 210, 57, 237, 45, 420, 57, FALSE);
 			DrawStringForImageButton(hdc_mem[1], langStr.szBtnEaseUSTodoBackup, 27, 65, 210, 77, 237, 65, 420, 77, FALSE);
-			DrawStringForImageButton(hdc_mem[1], langStr.szBtnEaseUSPartitionMaster, 27, 85, 210, 97, 237, 85, 420, 97, FALSE);
-			DrawStringForImageButton(hdc_mem[1], langStr.szBtnMiniToolPartitionWizard, 27, 105, 210, 117, 237, 105, 420, 117, FALSE);
-			DrawStringForImageButton(hdc_mem[1], langStr.szBtnAcronisDiskDirector, 27, 125, 210, 137, 237, 125, 420, 137, FALSE);
-			DrawStringForImageButton(hdc_mem[1], langStr.szBtnParagonPartitionManager, 27, 145, 210, 157, 237, 145, 420, 157, FALSE);
-			DrawStringForImageButton(hdc_mem[1], langStr.szBtnOtherDiskTool, 27, 165, 210, 177, 237, 165, 420, 177, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnAomeiBackupper, 27, 85, 210, 97, 237, 85, 420, 97, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnEaseUSPartitionMaster, 27, 105, 210, 117, 237, 105, 420, 117, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnMiniToolPartitionWizard, 27, 125, 210, 137, 237, 125, 420, 137, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnAcronisDiskDirector, 27, 145, 210, 157, 237, 145, 420, 157, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnParagonPartitionManager, 27, 165, 210, 177, 237, 165, 420, 177, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnAomeiPartitionAssistant, 27, 185, 210, 197, 237, 185, 420, 197, FALSE);
+			DrawStringForImageButton(hdc_mem[1], langStr.szBtnOtherDiskTool, 27, 205, 210, 217, 237, 205, 420, 217, FALSE);
 			
 			break;
 		

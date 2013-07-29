@@ -68,10 +68,12 @@ BEGIN
 	IDS_BUTTON_DISCWIZARD				"シーゲイト ディスクウィザード"
 	IDS_BUTTON_PARAGONBACKUPANDRECOVERY	"パラゴン バックアップアンドリカバリー"
 	IDS_BUTTON_EASEUSTODOBACKUP			"イーザス トゥードゥーバックアップ"
+	IDS_BUTTON_AOMEIBACKUPPER			"アオメイ バックアッパー"
 	IDS_BUTTON_EASEUSPARTITIONMASTER	"イーザス パーティーションマスター"
 	IDS_BUTTON_MINITOOLPARTITIONWIZARD	"ミニツール ﾊﾟｰﾃｨｰｼｮﾝｳｨｻﾞｰﾄﾞ"
 	IDS_BUTTON_ACRONISDISKDIRECTOR		"アクロニス ﾃﾞｨｽｸﾀﾞｲﾚｸﾀｰ ﾎｰﾑ"
 	IDS_BUTTON_PARAGONPARTITIONMANAGER	"パラゴン ﾊﾟｰﾃｨｰｼｮﾝﾏﾈｰｼﾞｬｰ"
+	IDS_BUTTON_AOMEIPARTITIONASSISTANT	"アオメイ パーティション アシスタント"
 	IDS_BUTTON_OTHERDISKTOOL			"その他のディスクツール"
 
 	// Buttons, 5

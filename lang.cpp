@@ -98,10 +98,12 @@ int LoadLangFile(int IsFileDialog)
 	LoadString(hLangFile, IDS_BUTTON_DISCWIZARD, langStr.szBtnDiscWizard, 50);
 	LoadString(hLangFile, IDS_BUTTON_PARAGONBACKUPANDRECOVERY, langStr.szBtnParagonBackupAndRecovery, 50);
 	LoadString(hLangFile, IDS_BUTTON_EASEUSTODOBACKUP, langStr.szBtnEaseUSTodoBackup, 50);
+	LoadString(hLangFile, IDS_BUTTON_AOMEIBACKUPPER, langStr.szBtnAomeiBackupper, 50);
 	LoadString(hLangFile, IDS_BUTTON_EASEUSPARTITIONMASTER, langStr.szBtnEaseUSPartitionMaster, 50);
 	LoadString(hLangFile, IDS_BUTTON_MINITOOLPARTITIONWIZARD, langStr.szBtnMiniToolPartitionWizard, 50);
 	LoadString(hLangFile, IDS_BUTTON_ACRONISDISKDIRECTOR, langStr.szBtnAcronisDiskDirector, 50);
 	LoadString(hLangFile, IDS_BUTTON_PARAGONPARTITIONMANAGER, langStr.szBtnParagonPartitionManager, 50);
+	LoadString(hLangFile, IDS_BUTTON_AOMEIPARTITIONASSISTANT, langStr.szBtnAomeiPartitionAssistant, 50);
 	LoadString(hLangFile, IDS_BUTTON_OTHERDISKTOOL, langStr.szBtnOtherDiskTool, 50);
 	
 	LoadString(hLangFile, IDS_BUTTON_RESCHANGE, langStr.szBtnResChange, 50);

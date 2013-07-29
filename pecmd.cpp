@@ -299,6 +299,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					Execute(NULL, NULL, TEXT("X:\\Program Files\\ETB\\bin\\loader.lnk"), NULL, NULL, SW_SHOWDEFAULT);
 					break;
 				
+				case IDC_AOMEIBACKUPPER:
+					// AOMEI Backupper
+					Execute(NULL, NULL, TEXT("X:\\Program Files\\AomeiBackupper\\Backupper.exe"), NULL, NULL, SW_SHOWDEFAULT);
+					break;
+				
 				case IDC_OTHERBACKUPTOOL:
 					// 他のバックアップツール
 					Execute(NULL, NULL, TEXT("X:\\Program Files\\otherbpt.lnk"), NULL, NULL, SW_SHOWDEFAULT);
@@ -322,6 +327,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				case IDC_PARAGPARTITIONMANAGER:
 					// Paragon Partition Manager
 					Execute(NULL, NULL, TEXT("X:\\Program Files\\PPM\\program\\launcher.lnk"), NULL, NULL, SW_SHOWDEFAULT);
+					break;
+				
+				case IDC_AOMEIPARTITIONASSISTANT:
+					// AOMEI Partition Assistant
+					Execute(NULL, NULL, TEXT("X:\\Program Files\\PA\\PartAssist.exe"), NULL, NULL, SW_SHOWDEFAULT);
 					break;
 				
 				case IDC_OTHERPARTITIONTOOL:
@@ -376,7 +386,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				
 				case IDC_WINDOWSRE:
 					// Windows RE
-					Execute(NULL, NULL, TEXT("X:\\sources\\recovery\\recenv.exe -notshell"), NULL, NULL, SW_SHOWDEFAULT);
+					Execute(NULL, NULL, TEXT("X:\\sources\\recovery\\recenv.exe"), TEXT("-notshell"), NULL, SW_SHOWDEFAULT);
 					break;
 				
 				case IDC_INSTALLWINDOWS:
